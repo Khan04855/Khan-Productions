@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "title": "Escape Your Love",
+    "artist": "FASSounds",
+    "url": "/music/fassounds-escape-your-love-upbeat-fashion-pop-dance-412230.mp3",
+    "genre": "Pop",
+    "licence": "Licence documentation not supplied; verify usage rights with the original source."
+  },
+  {
+    "id": 2,
+    "title": "Water | Afro-pop Music",
+    "artist": "kontraa",
+    "url": "/music/kontraa-water-afro-pop-music-445661.mp3",
+    "genre": "Afro Pop",
+    "licence": "Licence documentation not supplied; verify usage rights with the original source."
+  },
+  {
+    "id": 3,
+    "title": "Carnaval",
+    "artist": "Alec_Koff",
+    "url": "/music/alec_koff-carnaval-484622.mp3",
+    "genre": "Electronic",
+    "licence": "Licence documentation not supplied; verify usage rights with the original source."
+  },
+  {
+    "id": 4,
+    "title": "Acoustic Spring Mothers Day",
+    "artist": "ikoliks_aj",
+    "url": "/music/ikoliks_aj-acoustic-spring-mothers-day-music-320427.mp3",
+    "genre": "Acoustic",
+    "licence": "Licence documentation not supplied; verify usage rights with the original source."
+  },
+  {
+    "id": 5,
+    "title": "Dance Playful Night",
+    "artist": "AleXZavesa",
+    "url": "/music/alexzavesa-dance-playful-night-510786.mp3",
+    "genre": "Dance",
+    "licence": "Licence documentation not supplied; verify usage rights with the original source."
+  },
+  {
+    "id": 6,
+    "title": "Powerful Dramatic Trailer",
+    "artist": "ArtMyLife",
+    "url": "/music/artmylife-powerful-dramatic-trailer-514242.mp3",
+    "genre": "Cinematic",
+    "licence": "Licence documentation not supplied; verify usage rights with the original source."
+  }
+]

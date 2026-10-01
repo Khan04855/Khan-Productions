@@ -1,0 +1,3 @@
+import { defineConfig } from '@playwright/test';
+import chromium from '@sparticuz/chromium';
+export default defineConfig({testDir:'./tests',workers:1,timeout:30000,use:{baseURL:'http://127.0.0.1:8080',headless:true,launchOptions:{executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH||(process.platform==='linux'?await chromium.executablePath():undefined),args:process.platform==='linux'?chromium.args.filter(arg=>arg!=='--single-process'):[]}},webServer:[{command:'npm run dev',url:'http://127.0.0.1:8080',reuseExistingServer:true},{command:'npm run api',url:'http://127.0.0.1:3001/api/health',reuseExistingServer:true}]});
