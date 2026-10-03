@@ -1,6 +1,6 @@
 import { useEffect,useRef,useState } from 'react';
 import { MessageCircle,X } from 'lucide-react';
-import { api } from './tools/ToolLayout';
+import { api } from '@/lib/tool-utils';
 type Message={role:'user'|'assistant';content:string};
 export default function Assistant(){const [open,setOpen]=useState(false);const [messages,setMessages]=useState<Message[]>([]);const [input,setInput]=useState('');const [busy,setBusy]=useState(false);const [error,setError]=useState('');const field=useRef<HTMLInputElement>(null);const toggle=useRef<HTMLButtonElement>(null);const end=useRef<HTMLDivElement>(null);
 useEffect(()=>{if(open)field.current?.focus();},[open]);useEffect(()=>{end.current?.scrollIntoView({block:'nearest'});},[messages,busy]);

@@ -17,7 +17,7 @@ export default function Library() {
             <img
               src="/tool-backgrounds/books-library.png"
               alt=""
-              fetchPriority="high"
+              loading="eager"
               className="h-full w-full object-cover object-right"
             />
             <div className="hero-shade absolute inset-0" />

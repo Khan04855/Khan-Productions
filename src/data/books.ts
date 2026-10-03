@@ -1,20 +1,20 @@
-import book0 from '@/assets/Books/AtomicHabitsbyJamesClear.pdf?url';
-import book1 from '@/assets/Books/TheAlchemist.pdf?url';
-import book2 from '@/assets/Books/SherlockHolmesReaderW1.pdf?url';
-import book3 from '@/assets/Books/AllQuietontheWesternFront.pdf?url';
-import book4 from '@/assets/Books/TheGunsofAugustByBarbaraWTuchman.pdf?url';
-import book5 from '@/assets/Books/HarryPotterandtheSorcerersStone.pdf?url';
-import book6 from '@/assets/Books/AlFarooq.pdf?url';
-import book7 from '@/assets/Books/EnglishSavioursOfIslamicSpiritAbridged.pdf?url';
-import book8 from '@/assets/Books/LostIslamicHistorybyFirasAlkhateeb.pdf?url';
-import book9 from '@/assets/Books/EnglishArRaheeqAlMakhtumTHESEALEDNECTAR.pdf?url';
+const book0 = '/books/AtomicHabitsbyJamesClear.pdf';
+const book1 = '/books/TheAlchemist.pdf';
+const book2 = '/books/SherlockHolmesReaderW1.pdf';
+const book3 = '/books/AllQuietontheWesternFront.pdf';
+const book4 = '/books/TheGunsofAugustByBarbaraWTuchman.pdf';
+const book5 = '/books/HarryPotterandtheSorcerersStone.pdf';
+const book6 = '/books/AlFarooq.pdf';
+const book7 = '/books/EnglishSavioursOfIslamicSpiritAbridged.pdf';
+const book8 = '/books/LostIslamicHistorybyFirasAlkhateeb.pdf';
+const book9 = '/books/EnglishArRaheeqAlMakhtumTHESEALEDNECTAR.pdf';
 export const booksData = [
   {
     id: 1,
     title: "Atomic Habits",
     author: "James Clear",
     
-    file: book0,
+    file: "https://drive.google.com/file/d/1BYf06ei8z-73a_Rq5kGoEZDa312FQRPI/view?usp=drive_link",
     genre: "Self-Development",
   },
   {
@@ -22,7 +22,7 @@ export const booksData = [
     title: "The Alchemist",
     author: "Paulo Coelho",
     
-    file: book1,
+    file: "https://drive.google.com/file/d/1_mpIwzgESFvIS2SoEAYVJesmjLTLlA1J/view?usp=drive_link",
     genre: "Fiction",
   },
   {
@@ -30,7 +30,7 @@ export const booksData = [
     title: "Sherlock Holmes Reader",
     author: "Arthur Conan Doyle",
     
-    file: book2,
+    file: "https://drive.google.com/file/d/1uM6l6x0N4PsvsYU-rjNaUTFWLY7Vi4cC/view?usp=drive_link",
     genre: "Mystery",
   },
   {
@@ -38,7 +38,7 @@ export const booksData = [
     title: "All Quiet on the Western Front",
     author: "Erich Maria Remarque",
     
-    file: book3,
+    file: "https://drive.google.com/file/d/1WlF7Gfi6DlTvn2oEfjocTTqc8BTNd47q/view?usp=drive_link",
     genre: "Historical Fiction",
   },
   {
@@ -46,7 +46,7 @@ export const booksData = [
     title: "The Guns of August",
     author: "Barbara W. Tuchman",
     
-    file: book4,
+    file: "https://drive.google.com/file/d/1m55RgvXSqRUw2uu1t_D0B_krVfSPjMGh/view?usp=drive_link",
     genre: "History",
   },
   {
@@ -54,7 +54,7 @@ export const booksData = [
     title: "Harry Potter & the Sorcerer's Stone",
     author: "J.K. Rowling",
     
-    file: book5,
+    file: "https://drive.google.com/file/d/12W58_hgVW4EzulNW_bWpN8840jE4eo3x/view?usp=drive_link",
     genre: "Fantasy",
   },
   {
@@ -62,7 +62,7 @@ export const booksData = [
     title: "Al-Farooq",
     author: "Allama Shibli Nomani",
     
-    file: book6,
+    file: "https://drive.google.com/file/d/1_9IV-amDlY8exfc3xvUdZaHYXRWWrO0A/view?usp=drive_link",
     genre: "Islamic History",
   },
   {
@@ -70,7 +70,7 @@ export const booksData = [
     title: "Saviours of Islamic Spirit",
     author: "Abul Hasan Ali Nadwi",
     
-    file: book7,
+    file: "https://drive.google.com/file/d/1LBOuf66FLw8jccMZvMJJEKmr2K8OPR9p/view?usp=drive_link",
     genre: "Islamic History",
   },
   {
@@ -78,7 +78,7 @@ export const booksData = [
     title: "Lost Islamic History",
     author: "Firas Alkhateeb",
     
-    file: book8,
+    file: "https://drive.google.com/file/d/101k2HQrZMRZQAuaLeM5OCOtkXyAdu-Me/view?usp=drive_link",
     genre: "Islamic History",
   },
   {
@@ -86,7 +86,7 @@ export const booksData = [
     title: "The Sealed Nectar",
     author: "Safiur Rahman Mubarakpuri",
     
-    file: book9,
+    file: "https://drive.google.com/file/d/1whBUCltnQUkpq4UQ3JnRtVGjvLCEGUi6/view?usp=drive_link",
     genre: "Biography",
   }
 ];

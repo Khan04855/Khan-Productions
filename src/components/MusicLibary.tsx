@@ -1,20 +1,206 @@
 import { useEffect, useRef, useState } from 'react';
-import tracks from '@/data/music.json';
-import ToolLayout, { downloadFile } from './tools/ToolLayout';
+import suppliedTracks from '@/data/music.json';
+import ToolLayout from './tools/ToolLayout';
+import { downloadFile } from '@/lib/tool-utils';
 
-type Track = (typeof tracks)[number];
+type Track = (typeof suppliedTracks)[number] & {
+  cover?: string;
+};
+
+type CardProps = {
+  track: Track;
+  saved: boolean;
+  onSave: () => void;
+};
+
+function MusicCard({ track, saved, onSave }: CardProps) {
+  const audio = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [playError, setPlayError] = useState('');
+  const [downloadError, setDownloadError] = useState('');
+  const [downloading, setDownloading] = useState(false);
+  const [status, setStatus] = useState('');
+
+  function activatePlayer() {
+    document
+      .querySelectorAll<HTMLAudioElement>('audio[data-khan-music]')
+      .forEach(player => {
+        if (player !== audio.current) player.pause();
+      });
+
+    setPlaying(true);
+    setPlayError('');
+  }
+
+  async function play() {
+    const player = audio.current;
+    if (!player) return;
+
+    setPlayError('');
+
+    try {
+      // Source stays unchanged while playback starts.
+      await player.play();
+    } catch (error) {
+      // Switching tracks can interrupt a pending Play request.
+      if (
+        error instanceof DOMException &&
+        error.name === 'AbortError'
+      ) {
+        return;
+      }
+
+      setPlayError(
+        'This track could not start. Try the player controls below.'
+      );
+    }
+  }
+
+  async function download() {
+    setDownloading(true);
+    setDownloadError('');
+    setStatus('Preparing download…');
+
+    const filename =
+      track.title.replace(/[^a-z0-9 -]/gi, '').trim() || 'track';
+
+    try {
+      await downloadFile(track.url, `${filename}.mp3`, 'audio');
+      setStatus('Download started. Check your browser downloads.');
+    } catch (error) {
+      setStatus('');
+      setDownloadError(
+        error instanceof Error
+          ? error.message
+          : 'Download failed. Please try again.'
+      );
+    } finally {
+      setDownloading(false);
+    }
+  }
+
+  return (
+    <article className="tool-panel flex flex-col">
+      <div className="flex aspect-[16/9] items-center justify-center overflow-hidden rounded-xl bg-muted">
+        <img
+          src={track.cover || '/cards/music-library.png'}
+          alt=""
+          loading="lazy"
+          className="h-full w-full object-contain p-3"
+          onError={event => {
+            const fallback = '/cards/music-library.png';
+
+            if (!event.currentTarget.src.endsWith(fallback)) {
+              event.currentTarget.src = fallback;
+            }
+          }}
+        />
+      </div>
+
+      <p className="text-xs text-muted-foreground">
+        {track.genre}
+      </p>
+
+      <h2 className="text-lg font-semibold leading-snug">
+        {track.title}
+      </h2>
+
+      <p className="text-sm text-muted-foreground">
+        {track.artist}
+      </p>
+
+      <audio
+        ref={audio}
+        data-khan-music
+        controls
+        src={track.url}
+        preload="none"
+        aria-label={`Player for ${track.title}`}
+        className="w-full min-w-0"
+        onPlay={activatePlayer}
+        onPause={() => setPlaying(false)}
+        onEnded={() => setPlaying(false)}
+        onError={() =>
+          setPlayError(
+            'Audio unavailable. Check this track file and its URL.'
+          )
+        }
+      />
+
+      {playing && (
+        <p role="status" className="text-sm text-primary">
+          Playing this track
+        </p>
+      )}
+
+      {playError && (
+        <p role="alert" className="error">
+          {playError}
+        </p>
+      )}
+
+      <div className="flex flex-wrap gap-3">
+        <button
+          type="button"
+          className="action"
+          aria-label={`Play ${track.title}`}
+          onClick={() => void play()}
+        >
+          Play
+        </button>
+
+        <button
+          type="button"
+          className="secondary-action"
+          aria-pressed={saved}
+          aria-label={`${saved ? 'Unsave' : 'Save'} ${track.title}`}
+          onClick={onSave}
+        >
+          {saved ? 'Saved' : 'Save'}
+        </button>
+
+        <button
+          type="button"
+          className="secondary-action"
+          disabled={downloading}
+          aria-label={`Download ${track.title} audio`}
+          onClick={() => void download()}
+        >
+          {downloading ? 'Preparing…' : 'Download Audio'}
+        </button>
+      </div>
+
+      {status && (
+        <p role="status" className="text-sm text-muted-foreground">
+          {status}
+        </p>
+      )}
+
+      {downloadError && (
+        <p role="alert" className="error">
+          {downloadError}
+        </p>
+      )}
+
+      <details>
+        <summary className="min-h-11 cursor-pointer py-3 text-sm">
+          Usage rights
+        </summary>
+
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          {track.licence}
+        </p>
+      </details>
+    </article>
+  );
+}
 
 export default function MusicLibrary() {
+  const [catalog, setCatalog] = useState<Track[]>(suppliedTracks);
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState('All Genres');
-  const [catalog, setCatalog] = useState<Track[]>(tracks);
-  const [current, setCurrent] = useState<Track | null>(tracks[0] ?? null);
   const [onlySaved, setOnlySaved] = useState(false);
-  const [downloadingId, setDownloadingId] = useState<number | null>(null);
-  const [error, setError] = useState('');
-  const [downloadStatus, setDownloadStatus] = useState('');
-
-  const audio = useRef<HTMLAudioElement>(null);
+  const [storageError, setStorageError] = useState('');
 
   const [favourites, setFavourites] = useState<number[]>(() => {
     try {
@@ -23,7 +209,9 @@ export default function MusicLibrary() {
       );
 
       return Array.isArray(saved)
-        ? saved.filter((id): id is number => typeof id === 'number')
+        ? saved.filter(
+            (id): id is number => typeof id === 'number'
+          )
         : [];
     } catch {
       return [];
@@ -32,10 +220,12 @@ export default function MusicLibrary() {
 
   useEffect(() => {
     const controller = new AbortController();
+    const base = (import.meta.env.VITE_API_BASE_URL || '')
+      .replace(/\/$/, '');
 
     async function loadCatalog() {
       try {
-        const response = await fetch('/api/music', {
+        const response = await fetch(`${base}/api/music`, {
           signal: controller.signal,
         });
 
@@ -58,15 +248,10 @@ export default function MusicLibrary() {
               item.url.startsWith('/music/')
           )
         ) {
-          const updated = data as Track[];
-          setCatalog(updated);
-
-          setCurrent(previous =>
-            updated.find(track => track.id === previous?.id) ?? updated[0]
-          );
+          setCatalog(data as Track[]);
         }
       } catch {
-        // Keep the supplied local catalog if the API is unavailable.
+        // The supplied catalog works without the API.
       }
     }
 
@@ -87,22 +272,12 @@ export default function MusicLibrary() {
     const matchesSaved =
       !onlySaved || favourites.includes(track.id);
 
-    const matchesSearch =
-      `${track.title} ${track.artist}`
-        .toLowerCase()
-        .includes(query.trim().toLowerCase());
+    const matchesSearch = `${track.title} ${track.artist}`
+      .toLowerCase()
+      .includes(query.trim().toLowerCase());
 
     return matchesGenre && matchesSaved && matchesSearch;
   });
-
-  const hasFilters =
-    query.trim() !== '' || genre !== 'All Genres' || onlySaved;
-
-  function resetFilters() {
-    setQuery('');
-    setGenre('All Genres');
-    setOnlySaved(false);
-  }
 
   function toggleSaved(id: number) {
     const next = favourites.includes(id)
@@ -110,6 +285,7 @@ export default function MusicLibrary() {
       : [...favourites, id];
 
     setFavourites(next);
+    setStorageError('');
 
     try {
       localStorage.setItem(
@@ -117,69 +293,23 @@ export default function MusicLibrary() {
         JSON.stringify(next)
       );
     } catch {
-      setError(
-        'Your browser could not save favourites. Please check your browser storage settings.'
+      setStorageError(
+        'Your browser could not save favourites for your next visit.'
       );
     }
   }
 
-  async function playTrack(track: Track) {
-    setError('');
-    setCurrent(track);
-
-    const player = audio.current;
-    if (!player) return;
-
-    player.src = track.url;
-
-    try {
-      await player.play();
-    } catch {
-      setError(
-        'Audio could not play. Check the audio file or try the player controls.'
-      );
-    }
-  }
-
-  function playNextTrack() {
-    if (!current) return;
-
-    const index = catalog.findIndex(track => track.id === current.id);
-    const next = catalog[index + 1];
-
-    if (next) void playTrack(next);
-  }
-
-  async function downloadTrack(track: Track) {
-    setDownloadingId(track.id);
-    setError('');
-    setDownloadStatus(`Preparing ${track.title}…`);
-
-    const name =
-      track.title.replace(/[^a-z0-9 -]/gi, '').trim() || 'track';
-
-    try {
-      await downloadFile(track.url, `${name}.mp3`, 'audio');
-      setDownloadStatus(
-        `Download started for ${track.title}. Check your browser downloads.`
-      );
-    } catch (err) {
-      setDownloadStatus('');
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'The audio download failed. Please try again.'
-      );
-    } finally {
-      setDownloadingId(null);
-    }
+  function resetFilters() {
+    setQuery('');
+    setGenre('All Genres');
+    setOnlySaved(false);
   }
 
   return (
     <ToolLayout
       title="Music Library"
       group="Audio Resources"
-      description="Search by track or artist, filter by genre, and play or download music."
+      description="Search by track or artist, filter by genre, and play music inside each track card."
     >
       <div className="tool-panel">
         <div className="grid gap-6 sm:grid-cols-2">
@@ -191,9 +321,9 @@ export default function MusicLibrary() {
             <input
               id="music-search"
               type="search"
+              placeholder="Track or artist name"
               value={query}
               onChange={event => setQuery(event.target.value)}
-              placeholder="Track or artist name"
               className="w-full"
             />
           </div>
@@ -222,16 +352,16 @@ export default function MusicLibrary() {
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            marginTop: '20px',
             minHeight: '44px',
-            cursor: 'pointer',
           }}
         >
           <input
             id="music-only-saved"
             type="checkbox"
             checked={onlySaved}
-            onChange={event => setOnlySaved(event.target.checked)}
+            onChange={event =>
+              setOnlySaved(event.target.checked)
+            }
             style={{
               width: '18px',
               height: '18px',
@@ -243,12 +373,13 @@ export default function MusicLibrary() {
           <span>Show saved tracks only</span>
         </label>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <p role="status" className="text-sm text-muted-foreground">
-            {filtered.length} {filtered.length === 1 ? 'track' : 'tracks'} found
+            {filtered.length}{' '}
+            {filtered.length === 1 ? 'track' : 'tracks'} found
           </p>
 
-          {hasFilters && (
+          {(query || genre !== 'All Genres' || onlySaved) && (
             <button
               type="button"
               className="secondary-action"
@@ -259,131 +390,31 @@ export default function MusicLibrary() {
           )}
         </div>
 
-        <div className="mt-6 rounded-xl bg-muted p-4 sm:p-5">
-          <p className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">
-            Music player
-          </p>
-
-          <h2 className="font-semibold">
-            {current ? `Selected: ${current.title}` : 'No tracks available'}
-          </h2>
-
-          {current && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              {current.artist}
-            </p>
-          )}
-
-          <audio
-            ref={audio}
-            controls
-            src={current?.url}
-            preload="metadata"
-            aria-label="Music player"
-            className="mt-4 w-full"
-            onError={() =>
-              setError(
-                'The audio file could not be loaded. Check that the file exists at its configured URL.'
-              )
-            }
-            onEnded={playNextTrack}
-          />
-        </div>
-
-        {downloadStatus && (
-          <p role="status" className="mt-4 text-sm text-muted-foreground">
-            {downloadStatus}
-          </p>
-        )}
-
-        {error && (
-          <p role="alert" className="error mt-4">
-            {error}
+        {storageError && (
+          <p role="alert" className="error">
+            {storageError}
           </p>
         )}
       </div>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        {filtered.map(track => {
-          const isSaved = favourites.includes(track.id);
-          const isSelected = current?.id === track.id;
-          const isDownloading = downloadingId === track.id;
-
-          return (
-            <article
-              key={track.id}
-              className="tool-panel flex flex-col"
-            >
-              <p className="text-xs text-muted-foreground">
-                {track.genre}
-              </p>
-
-              <h2 className="mt-2 text-lg font-semibold leading-snug">
-                {track.title}
-              </h2>
-
-              <p className="mt-1 text-sm text-muted-foreground">
-                {track.artist}
-              </p>
-
-              {isSelected && (
-                <p className="mt-2 text-sm font-medium text-primary">
-                  Selected in player
-                </p>
-              )}
-
-              <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  className="action"
-                  aria-label={`Play ${track.title}`}
-                  onClick={() => void playTrack(track)}
-                >
-                  Play
-                </button>
-
-                <button
-                  type="button"
-                  className="secondary-action"
-                  aria-pressed={isSaved}
-                  aria-label={`${isSaved ? 'Unsave' : 'Save'} ${track.title}`}
-                  onClick={() => toggleSaved(track.id)}
-                >
-                  {isSaved ? 'Saved' : 'Save'}
-                </button>
-
-                <button
-                  type="button"
-                  className="secondary-action"
-                  disabled={downloadingId !== null}
-                  aria-label={`Download ${track.title} audio`}
-                  onClick={() => void downloadTrack(track)}
-                >
-                  {isDownloading ? 'Preparing…' : 'Download Audio'}
-                </button>
-              </div>
-
-              <details className="mt-4">
-                <summary className="min-h-11 cursor-pointer py-3 text-sm">
-                  Usage rights
-                </summary>
-
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {track.licence}
-                </p>
-              </details>
-            </article>
-          );
-        })}
+        {filtered.map(track => (
+          <MusicCard
+            key={track.id}
+            track={track}
+            saved={favourites.includes(track.id)}
+            onSave={() => toggleSaved(track.id)}
+          />
+        ))}
       </div>
 
-      {filtered.length === 0 && (
-        <div className="tool-panel mt-6 text-center">
+      {!filtered.length && (
+        <div className="tool-panel mt-6">
           <p>No tracks match your filters.</p>
 
           <button
             type="button"
-            className="secondary-action mt-4"
+            className="secondary-action"
             onClick={resetFilters}
           >
             Show all tracks

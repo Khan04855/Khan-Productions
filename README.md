@@ -1,79 +1,54 @@
-# Khan Productions — Store & Dedicated Resource Pages
+# Khan Productions — Ready for service connection
 
-## Run on Windows
-
-Extract this ZIP, then open the folder containing package.json (KhanProductions-Store-Updated).
-In that folder, open CMD:
+## Windows: start here
+Extract `KhanProductions-Ready.zip`. Open CMD inside **KhanProductions-Ready**, where `package.json` exists. Use Node 22.12+.
 
 ```bat
 npm ci
+copy .env.example .env
 npm run dev
 ```
-
-Open the URL printed by Vite. For API tools open a second CMD in the same folder:
+Open http://localhost:8080. In a second CMD in that SAME folder:
 
 ```bat
-copy .env.example .env
-notepad .env
 npm run api
 ```
+Keep both terminals open. Existing private `.env` should be retained rather than overwritten. Do not copy node_modules or dist from an old project.
 
-Keep your existing private .env locally if it already contains working credentials. Never share it or put provider keys in VITE variables. Restart the API after changing credentials.
+## What works without provider credentials
+- Books: 10 supplied PDFs, real covers, search/genres, read and download.
+- Music: six supplied tracks, playback, download, genres and persistent local favourites.
+- Background removal: local browser inference and transparent PNG downloads; no paid API. Model/runtime assets are included in `public/background-model`. First use loads tens of MB and can be slower on phones. Modern browser with WebAssembly required.
+- Image tools: JPG/PNG/WebP conversion, maximum size in KB/MB, automatic quality/dimension adjustment preserving proportions, batches and ZIP download. PNG may need dimension reduction. Maximum is a ceiling, not an exact byte size.
+- PDF tools: merge, extract, reorder, rotate and images-to-PDF locally. No OCR, password unlocking or scanned-image recompression. Toolkit upload limit is 50 MB; the supplied larger Al-Farooq PDF can still be read/downloaded from the library.
 
-## Pages
+## Connect Gemini AI Assistant
+Edit `.env`: set `GEMINI_API_KEY` and `GEMINI_MODEL` to the exact model ID available in your Google AI Studio project. Leave `AI_PROVIDER=gemini`. Restart `npm run api`.
+The server calls Gemini's OpenAI-compatible REST endpoint. Keys remain on the server, never in `VITE_` variables. The assistant has store/tool context and does not invent orders or current product prices. Chat subscriptions are not a substitute for an API key/project quota. Live credentials have not been tested in this package.
 
-- `/`: store hero, product catalogue, then three resource links opening in new tabs; blog/about/FAQ/contact retained.
-- `/tools`: grouped tools dashboard.
-- `/background-remover`: transparent PNG workflow (remove.bg key required).
-- `/image-tools`: local JPG/PNG/WebP conversion, resize, compression, batch ZIP.
-- `/pdf-toolkit`: local merge/extract/reorder/rotate/images-to-PDF/structure optimisation.
-- `/compiler`: Python/JavaScript/C/C++/Java through configured Judge0 service.
-- `/music-library`: supplied music, player, filters, local favourites/downloads.
-- `/library`: supplied books with existing custom covers, genre/search/read/download.
+## Connect Universal Code Compiler
+Set `JUDGE0_URL` to a Judge0 CE service. Add the authentication fields required by that service and check language IDs against its `/languages` response. Restart the API. The project submits bounded execution jobs; it does not run visitors' code directly in the website Node process. A separate sandboxed Judge0 deployment or hosted service is required. Its availability and live execution remain to be verified with your configuration.
 
-Each page has its own title and description. Existing individual tool URLs remain compatible.
-Main store uses the supplied marketplace-bg.png and removes the decorative workspace card.
-Image boxes have explicit equal geometry; products are contained without cropping and buttons align within rows. Expanded details intentionally enlarge a row.
+## Downloads and new content
+Files must exist at the path configured in `src/data/books.ts` and `public/music/music.json`. Hosting alone does not repair broken paths. The supplied files are included and tested.
+For a new song, place audio in `public/music`, artwork in `public/music/covers`, then add `src` and optional `cover` URLs in music.json. Without a cover, the default library artwork is used. Same-origin files are preferred; external downloads require that host's CORS/download permissions. Google Drive is not required.
 
-## Live services
-
-AI Assistant: AI_API_KEY, AI_BASE_URL, AI_MODEL.
-Compiler: JUDGE0_URL plus the authentication settings required by your provider.
-Background remover: REMOVE_BG_API_KEY.
-No live provider operation has been verified without your credentials. GET /api/health only checks whether required settings are present.
-PDF optimisation does not recompress scanned images. PDF passwords/signatures/OCR are not supported. Check rights before publicly distributing supplied books and music.
-
-## Public hosting and search
-
-No domain/subdomain has been configured or published by this update. All pages currently run in one app; a separate subdomain deployment is a later hosting step. Deploying under a tools subdomain requires that host to serve these routes and proxy `/api` to the backend.
-
-For a crawler-readable static build, first install Chromium on Windows:
-
+## Production
 ```bat
-npx playwright install chromium
+npm run build
+npm start
 ```
+The Node server serves `dist`, SPA routes, audio/PDF byte ranges and `/api` together. Set `API_HOST=0.0.0.0` and `ALLOWED_ORIGINS` to your public origin on hosting; use HTTPS. The host may supply `PORT`. Static-only hosting needs a separate Node API and either a proxy or `VITE_API_BASE_URL` before building. Set `VITE_SITE_URL` to the public website origin. The process-level rate limiter is shared by socket IP behind a proxy; production abuse controls belong at the proxy/provider as well.
 
-Set your real public origin (example only — replace it) before building:
+For prerendered SEO pages install Chromium with `npx playwright install chromium`, then run `npm run build:seo`. Public deployment, Search Console verification and indexing are separate steps; ranking is not guaranteed.
 
-```bat
-set VITE_SITE_URL=https://your-real-domain.com
-npm run build:seo
-```
-
-Alternatively set VITE_SITE_URL in .env. It is public configuration, not a secret.
-This command creates `dist/<route>/index.html` containing rendered content, titles, descriptions and canonical links. With VITE_SITE_URL it also creates sitemap.xml and robots.txt. Without it, domain-dependent canonical links and sitemap are omitted.
-`npm run build` is a normal client-side Vite build; use build:seo for prerendered public pages.
-Serve the entire dist folder; configure clean URLs/directory indexes and a 404 or SPA fallback. Test direct page loads and refreshing nested routes on the chosen host. Search Console submission/index inspection comes after public deployment. Indexing and ranking are not guaranteed.
-
-For production serve HTTPS, forward `/api` to the Node server, add the public origin to ALLOWED_ORIGINS and review hosting/provider limits. The included process-level rate limiter is not a distributed abuse-control system.
-
-## Verification
-
+## Checks
 ```bat
 npm run typecheck
 npm run lint
 npm run test:api
+npx playwright install chromium
 npm test
+npm run build
 ```
-
-Do not copy old node_modules or old dist. npm ci installs dependencies from the included lockfile.
+See VALIDATION.md for results and THIRD_PARTY_NOTICES.md for included model/runtime licensing. Push the updated source before public deployment so the source link in the background-removal tool stays current. No keys are included.

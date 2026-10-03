@@ -18,7 +18,7 @@ export default function Tools() {
             <img
               src="/tool-backgrounds/tools-dashboard.png"
               alt=""
-              fetchPriority="high"
+              loading="eager"
               className="h-full w-full object-cover object-right"
             />
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import ToolLayout, { downloadBlob } from './ToolLayout';
+import ToolLayout from './ToolLayout';
+import { downloadBlob } from '@/lib/tool-utils';
 
 type Output = { name: string; blob: Blob; original: number };
 const sizes = (bytes: number) => bytes >= 1024 * 1024

@@ -1,0 +1,63 @@
+ .env.example                                       |   34 [32m+[m[31m-[m
+ README.md                                          |   83 [32m+[m[31m-[m
+ START-WEBSITE.cmd                                  |   17 [32m+[m
+ THIRD_PARTY_NOTICES.md                             |    5 [32m+[m
+ VALIDATION.md                                      |   25 [32m+[m[31m-[m
+ package-lock.json                                  |  194 [32m+[m[31m-[m
+ package.json                                       |    9 [32m+[m[31m-[m
+ previews/tools-dashboard.png                       |  Bin [31m119976[m -> [32m225801[m bytes
+ ...8b2d2531c018973282906db2b80c9995731340b84d28a47 |    3 [32m+[m
+ ...594f7c4c66787f9465efed8dae6010b02f8575ea36bf81b |  Bin [31m0[m -> [32m4194304[m bytes
+ ...dbb657b3e2a33480919507b6cf93750011d317d588d97d3 |  Bin [31m0[m -> [32m4194304[m bytes
+ ...1aaec08a7268cfb9832dcafa9e5a889b7f23f990ffe16ab |  135 [32m+[m
+ ...7b3b33b49636afd74f8dc837a9580fb084de1c9b7d3a81c |  Bin [31m0[m -> [32m2041589[m bytes
+ ...e041fbc9c63fd5c2d9864bc732a01994518f96e9ec2f357 |  Bin [31m0[m -> [32m4194304[m bytes
+ ...6af3649f3d85159333dc720b1384d322b4070ae9a46dc19 |  Bin [31m0[m -> [32m4194304[m bytes
+ ...0f103f052e112e521dd27123b9f6b8615efa6cb32bfaa4f |    2 [32m+[m
+ ...e2ee00d49a52dbf1b1a98863df325dc1c080252cbfe5fd9 |  Bin [31m0[m -> [32m3431207[m bytes
+ ...e2a62e5a2556c83682dce65234d92455eb29fa0e7e98740 |  Bin [31m0[m -> [32m4194304[m bytes
+ ...05643b7d71d4d39e83c3577ffd91aa6d53ce8971f2ac995 |  Bin [31m0[m -> [32m4194304[m bytes
+ ...e7b42d2f46e35a0da25f4d679ff4218b72bc8cf8fd4d291 |    1 [32m+[m
+ public/background-model/LICENSE.md                 |  650 [32m++++[m
+ public/background-model/ThirdPartyLicenses.json    |   12 [32m+[m
+ ...cf32b61349bc9c3a8ccb9be2246e45db6bfca6e37b78117 |    1 [32m+[m
+ ...b3e1ca7b65068328270f072b61cdda490b732211e1da5d9 |   83 [32m+[m
+ ...cca15b3595e0f296d1c68a285075c87c32ff52884120809 |  Bin [31m0[m -> [32m4194304[m bytes
+ ...f7c9040fd99a3897bfdf7d1550da1ccf8bea60902e9c585 | 3247 [32m++++++++++++++++++++[m
+ ...09322097282f88e9e02315273e291373366261cd0a77059 |    4 [32m+[m
+ ...81977524cf0c19994542cb044626cfffca0b304a6cf227c |    1 [32m+[m
+ ...e0701ad47876c8fdc1b5eb487bbd6c2b58dd65fdc8bdc47 |    1 [32m+[m
+ ...a1b5d9a91c203f2c613346083f02072c27c91672ccda8cf |  Bin [31m0[m -> [32m4194304[m bytes
+ ...3b4cb885d9fce1dbf043ee002c4a161688f36c2d2a122e0 |    3 [32m+[m
+ ...49494309ca84dff33bef456c0346c2bbfcd21e3b388d87a |  Bin [31m0[m -> [32m4194304[m bytes
+ public/background-model/resources.json             |    1 [32m+[m
+ {src/assets/Books => public/books}/AlFarooq.pdf    |  Bin
+ .../books}/AllQuietontheWesternFront.pdf           |  Bin
+ .../books}/AtomicHabitsbyJamesClear.pdf            |  Bin
+ .../EnglishArRaheeqAlMakhtumTHESEALEDNECTAR.pdf    |  Bin
+ .../EnglishSavioursOfIslamicSpiritAbridged.pdf     |    0
+ .../books}/HarryPotterandtheSorcerersStone.pdf     |  Bin
+ .../books}/LostIslamicHistorybyFirasAlkhateeb.pdf  |  Bin
+ .../books}/SherlockHolmesReaderW1.pdf              |  Bin
+ .../assets/Books => public/books}/TheAlchemist.pdf |  Bin
+ .../books}/TheGunsofAugustByBarbaraWTuchman.pdf    |  Bin
+ scripts/prerender.mjs                              |    2 [32m+[m[31m-[m
+ server/api.test.mjs                                |   78 [32m+[m[31m-[m
+ server/index.mjs                                   |  232 [32m+[m[31m-[m
+ src/components/Assistant.tsx                       |    2 [32m+[m[31m-[m
+ src/components/Books.tsx                           |  305 [32m+[m[31m-[m
+ src/components/CodeCompiler.tsx                    |    5 [32m+[m[31m-[m
+ src/components/Hero.tsx                            |    2 [32m+[m[31m-[m
+ src/components/MusicLibary.tsx                     |  443 [32m+[m[31m--[m
+ src/components/bg-studio.tsx                       |   85 [32m+[m[31m-[m
+ src/components/tools/ImageTools.tsx                |    3 [32m+[m[31m-[m
+ src/components/tools/PdfToolkit.tsx                |    5 [32m+[m[31m-[m
+ src/components/tools/ToolLayout.tsx                |   23 [32m+[m[31m-[m
+ src/data/books.ts                                  |   40 [32m+[m[31m-[m
+ src/index.css                                      |    3 [32m+[m
+ src/lib/tool-utils.ts                              |   21 [32m+[m
+ src/pages/Library.tsx                              |    2 [32m+[m[31m-[m
+ src/pages/Tools.tsx                                |    2 [32m+[m[31m-[m
+ tests/store.spec.ts                                |    4 [32m+[m[31m-[m
+ tests/tools.spec.ts                                |  110 [32m+[m[31m-[m
+ 62 files changed, 5299 insertions(+), 579 deletions(-)
