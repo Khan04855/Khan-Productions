@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Books from '@/components/Books';
+import { publicAsset } from '@/lib/public-asset';
 
 export default function Library() {
   return (
@@ -15,7 +16,7 @@ export default function Library() {
             className="pointer-events-none absolute inset-0 -z-10"
           >
             <img
-              src="/tool-backgrounds/books-library.png"
+              src={publicAsset('tool-backgrounds/books-library.png')}
               alt=""
               loading="eager"
               className="h-full w-full object-cover object-right"

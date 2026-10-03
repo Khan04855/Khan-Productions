@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Services from '@/components/Services';
+import { publicAsset } from '@/lib/public-asset';
 
 export default function Tools() {
   return (
@@ -16,7 +17,7 @@ export default function Tools() {
             className="pointer-events-none absolute inset-0 -z-10"
           >
             <img
-              src="/tool-backgrounds/tools-dashboard.png"
+              src={publicAsset('tool-backgrounds/tools-dashboard.png')}
               alt=""
               loading="eager"
               className="h-full w-full object-cover object-right"

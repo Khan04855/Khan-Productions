@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import suppliedTracks from '@/data/music.json';
 import ToolLayout from './tools/ToolLayout';
 import { downloadFile } from '@/lib/tool-utils';
+import { publicAsset } from '@/lib/public-asset';
 
 type Track = (typeof suppliedTracks)[number] & {
   cover?: string;
@@ -83,12 +84,12 @@ function MusicCard({ track, saved, onSave }: CardProps) {
     <article className="tool-panel flex flex-col">
       <div className="flex aspect-[16/9] items-center justify-center overflow-hidden rounded-xl bg-muted">
         <img
-          src={track.cover || '/cards/music-library.png'}
+          src={track.cover ? publicAsset(track.cover) : publicAsset('cards/music-library.png')}
           alt=""
           loading="lazy"
           className="h-full w-full object-contain p-3"
           onError={event => {
-            const fallback = '/cards/music-library.png';
+            const fallback = publicAsset('cards/music-library.png');
 
             if (!event.currentTarget.src.endsWith(fallback)) {
               event.currentTarget.src = fallback;
@@ -196,7 +197,7 @@ function MusicCard({ track, saved, onSave }: CardProps) {
 }
 
 export default function MusicLibrary() {
-  const [catalog, setCatalog] = useState<Track[]>(suppliedTracks);
+  const [catalog, setCatalog] = useState<Track[]>(suppliedTracks.map(track => ({ ...track, url: publicAsset(track.url) })));
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState('All Genres');
   const [onlySaved, setOnlySaved] = useState(false);

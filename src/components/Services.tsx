@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
+import { publicAsset } from '@/lib/public-asset';
 
 const groups = [
   {
@@ -76,7 +77,7 @@ export default function Services() {
               <div className="mb-6 flex items-center gap-4">
                 <div className="flex h-20 w-20 shrink-0 items-center justify-center">
                   <img
-                    src={group.image}
+                    src={publicAsset(group.image)}
                     alt=""
                     loading="lazy"
                     decoding="async"

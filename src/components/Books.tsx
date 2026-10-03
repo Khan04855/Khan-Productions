@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { BookOpen, Download } from 'lucide-react';
 import { booksData } from '@/data/books';
+import { publicAsset } from '@/lib/public-asset';
 
 const covers: Record<number, string> = {
-  1: '/books-covers/atomic-habits.png',
-  2: '/books-covers/TheAlchemist.png',
-  3: '/books-covers/sherlock-holmes.png',
-  4: '/books-covers/all-quiet.png',
-  5: '/books-covers/guns-of-august.png',
-  6: '/books-covers/harry-potter.png',
-  7: '/books-covers/al-farooq.png',
-  8: '/books-covers/saviours-islamic-spirit.png',
-  9: '/books-covers/lost-islamic-history.png',
-  10: '/books-covers/sealed-nectar.png',
+  1: publicAsset('books-covers/atomic-habits.png'),
+  2: publicAsset('books-covers/TheAlchemist.png'),
+  3: publicAsset('books-covers/sherlock-holmes.png'),
+  4: publicAsset('books-covers/all-quiet.png'),
+  5: publicAsset('books-covers/guns-of-august.png'),
+  6: publicAsset('books-covers/harry-potter.png'),
+  7: publicAsset('books-covers/al-farooq.png'),
+  8: publicAsset('books-covers/saviours-islamic-spirit.png'),
+  9: publicAsset('books-covers/lost-islamic-history.png'),
+  10: publicAsset('books-covers/sealed-nectar.png'),
 };
 export default function Books(){const [downloading,setDownloading]=useState<number|null>(null);const [downloadError,setDownloadError]=useState('');const [downloadStatus,setDownloadStatus]=useState('');const [query,setQuery]=useState('');const [genre,setGenre]=useState('All Books');const categories=['All Books',...new Set(booksData.map(b=>b.genre))];const filtered=booksData.filter(b=>(genre==='All Books'||b.genre===genre)&&`${b.title} ${b.author}`.toLowerCase().includes(query.trim().toLowerCase()));function reset(){setQuery('');setGenre('All Books');}
 

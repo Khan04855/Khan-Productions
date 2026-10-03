@@ -1,4 +1,5 @@
 import { ArrowUpRight } from 'lucide-react';
+import { publicAsset } from '@/lib/public-asset';
 
 const resources = [
   {
@@ -41,7 +42,7 @@ export default function ResourceLinks() {
           {resources.map(resource => (
             <a
               key={resource.href}
-              href={resource.href}
+              href={publicAsset(resource.href)}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-primary"
@@ -49,7 +50,7 @@ export default function ResourceLinks() {
               {/* Same-height image area for all three cards */}
               <div className="flex h-52 shrink-0 items-center justify-center bg-muted/30 p-6 sm:h-60">
                 <img
-                  src={resource.image}
+                  src={publicAsset(resource.image)}
                   alt=""
                   loading="lazy"
                   decoding="async"

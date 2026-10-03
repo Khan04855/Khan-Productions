@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ToolLayout from './tools/ToolLayout';
 import { downloadBlob } from '@/lib/tool-utils';
+import { publicAsset } from '@/lib/public-asset';
 
 export default function BackgroundRemover() {
   const [file, setFile] = useState<File | null>(null);
@@ -44,7 +45,7 @@ export default function BackgroundRemover() {
       const { removeBackground } = await import('@imgly/background-removal');
       const blob = await removeBackground(file, {
         model: 'isnet_quint8', device: 'cpu', proxyToWorker: false,
-        publicPath: new URL('/background-model/', location.origin).href,
+        publicPath: new URL(publicAsset('background-model/'), location.origin).href,
         output: { format: 'image/png', quality: 1 },
         progress: (key, current, total) => {
           setProgress(key.startsWith('fetch:')
