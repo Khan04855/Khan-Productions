@@ -44,7 +44,7 @@ For prerendered SEO pages install Chromium with `npx playwright install chromium
 
 ## GitHub Pages
 
-The `Deploy GitHub Pages` workflow builds this project from the repository root, sets the Vite base path to `/Khan-Productions/`, and deploys the generated `dist` directory. In the repository's **Settings → Pages**, select **GitHub Actions** as the build and deployment source. The workflow also publishes `dist/404.html` so app routes can be opened directly. It does not read or deploy `.env` files or API keys.
+The `Deploy website to Pages` workflow builds this project from the repository root, sets the Vite base path to `/Khan-Productions/`, and deploys the generated `dist` directory. In the repository's **Settings → Pages**, select **GitHub Actions** as the build and deployment source. The workflow also publishes `dist/404.html` so app routes can be opened directly. It does not read or deploy `.env` files or API keys.
 
 ## Checks
 ```bat
