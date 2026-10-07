@@ -12,9 +12,10 @@
     "api": "node --env-file-if-exists=.env server/index.mjs",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "test": "playwright test",
-    "test:api": "node --test server/api.test.mjs",
+    "test:api": "node --test server/*.test.mjs",
     "build:seo": "vite build && node scripts/prerender.mjs",
-    "start": "node --env-file-if-exists=.env server/index.mjs"
+    "start": "node --env-file-if-exists=.env server/index.mjs",
+    "admin:setup": "node --env-file-if-exists=.env server/admin-setup.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -94,6 +95,6 @@
     "vite": "^7.3.1"
   },
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.13.0"
   }
 }

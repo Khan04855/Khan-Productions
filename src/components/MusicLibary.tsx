@@ -1,12 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import suppliedTracks from '@/data/music.json';
+import { useRef, useState } from 'react';
+import { useCatalogue, catalogueAsset, type Track } from '@/contexts/CatalogueContext';
+import { useCataloguePages, CatalogueControls, CataloguePagination } from './CatalogueControls';
 import ToolLayout from './tools/ToolLayout';
 import { downloadFile } from '@/lib/tool-utils';
-import { publicAsset } from '@/lib/public-asset';
-
-type Track = (typeof suppliedTracks)[number] & {
-  cover?: string;
-};
+import { musicArtwork } from '@/lib/music-artwork';
 
 type CardProps = {
   track: Track;
@@ -15,6 +12,7 @@ type CardProps = {
 };
 
 function MusicCard({ track, saved, onSave }: CardProps) {
+  const fallbackCover = musicArtwork(track);
   const audio = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [playError, setPlayError] = useState('');
@@ -66,7 +64,7 @@ function MusicCard({ track, saved, onSave }: CardProps) {
       track.title.replace(/[^a-z0-9 -]/gi, '').trim() || 'track';
 
     try {
-      await downloadFile(track.url, `${filename}.mp3`, 'audio');
+      await downloadFile(catalogueAsset(track.url), `${filename}.mp3`, 'audio');
       setStatus('Download started. Check your browser downloads.');
     } catch (error) {
       setStatus('');
@@ -81,18 +79,16 @@ function MusicCard({ track, saved, onSave }: CardProps) {
   }
 
   return (
-    <article className="tool-panel flex flex-col">
+    <article className="tool-panel music-card flex flex-col">
       <div className="flex aspect-[16/9] items-center justify-center overflow-hidden rounded-xl bg-muted">
         <img
-          src={track.cover ? publicAsset(track.cover) : publicAsset('cards/music-library.png')}
+          src={track.cover ? catalogueAsset(track.cover) : fallbackCover}
           alt=""
           loading="lazy"
-          className="h-full w-full object-contain p-3"
+          className="h-full w-full object-cover"
           onError={event => {
-            const fallback = publicAsset('cards/music-library.png');
-
-            if (!event.currentTarget.src.endsWith(fallback)) {
-              event.currentTarget.src = fallback;
+            if (event.currentTarget.src !== fallbackCover) {
+              event.currentTarget.src = fallbackCover;
             }
           }}
         />
@@ -114,7 +110,7 @@ function MusicCard({ track, saved, onSave }: CardProps) {
         ref={audio}
         data-khan-music
         controls
-        src={track.url}
+        src={catalogueAsset(track.url)}
         preload="none"
         aria-label={`Player for ${track.title}`}
         className="w-full min-w-0"
@@ -183,7 +179,7 @@ function MusicCard({ track, saved, onSave }: CardProps) {
         </p>
       )}
 
-      <details>
+      <details className="catalogue-details">
         <summary className="min-h-11 cursor-pointer py-3 text-sm">
           Usage rights
         </summary>
@@ -197,7 +193,7 @@ function MusicCard({ track, saved, onSave }: CardProps) {
 }
 
 export default function MusicLibrary() {
-  const [catalog, setCatalog] = useState<Track[]>(suppliedTracks.map(track => ({ ...track, url: publicAsset(track.url) })));
+  const {music:catalog}=useCatalogue();
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState('All Genres');
   const [onlySaved, setOnlySaved] = useState(false);
@@ -219,48 +215,6 @@ export default function MusicLibrary() {
     }
   });
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const base = (import.meta.env.VITE_API_BASE_URL || '')
-      .replace(/\/$/, '');
-
-    async function loadCatalog() {
-      try {
-        const response = await fetch(`${base}/api/music`, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) return;
-
-        const data: unknown = await response.json();
-
-        if (
-          Array.isArray(data) &&
-          data.length > 0 &&
-          data.every(
-            item =>
-              item &&
-              typeof item.id === 'number' &&
-              typeof item.title === 'string' &&
-              typeof item.artist === 'string' &&
-              typeof item.genre === 'string' &&
-              typeof item.licence === 'string' &&
-              typeof item.url === 'string' &&
-              item.url.startsWith('/music/')
-          )
-        ) {
-          setCatalog(data as Track[]);
-        }
-      } catch {
-        // The supplied catalog works without the API.
-      }
-    }
-
-    void loadCatalog();
-
-    return () => controller.abort();
-  }, []);
-
   const genres = [
     'All Genres',
     ...new Set(catalog.map(track => track.genre)),
@@ -279,6 +233,8 @@ export default function MusicLibrary() {
 
     return matchesGenre && matchesSaved && matchesSearch;
   });
+
+  const paging=useCataloguePages(filtered,query+'|'+genre+'|'+onlySaved);
 
   function toggleSaved(id: number) {
     const next = favourites.includes(id)
@@ -391,6 +347,7 @@ export default function MusicLibrary() {
           )}
         </div>
 
+        <CatalogueControls paging={paging} id="music"/>
         {storageError && (
           <p role="alert" className="error">
             {storageError}
@@ -398,8 +355,8 @@ export default function MusicLibrary() {
         )}
       </div>
 
-      <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        {filtered.map(track => (
+      <div className={`catalogue-grid music-grid mt-6 ${paging.compact?'compact':''}`}>
+        {paging.items.map(track => (
           <MusicCard
             key={track.id}
             track={track}
@@ -409,6 +366,7 @@ export default function MusicLibrary() {
         ))}
       </div>
 
+      <CataloguePagination paging={paging}/>
       {!filtered.length && (
         <div className="tool-panel mt-6">
           <p>No tracks match your filters.</p>

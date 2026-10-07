@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useLayoutEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light';
 
@@ -28,7 +28,7 @@ export function ThemeProvider({
     () => { try { const saved = localStorage.getItem('khan-theme'); return saved === 'light' || saved === 'dark' ? saved : defaultTheme; } catch { return defaultTheme; } }
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);

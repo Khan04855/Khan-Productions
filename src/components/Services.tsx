@@ -31,17 +31,6 @@ const groups = [
     ],
   },
   {
-    name: 'Developer Tools',
-    image: '/categories/developer-tools.png',
-    tools: [
-      {
-        name: 'Code Compiler',
-        description: 'Run code in five supported languages.',
-        url: '/compiler',
-      },
-    ],
-  },
-  {
     name: 'Audio Resources',
     image: '/categories/audio-resources.png',
     tools: [

@@ -16,7 +16,7 @@ export default function Library() {
             className="pointer-events-none absolute inset-0 -z-10"
           >
             <img
-              src={publicAsset('tool-backgrounds/books-library.png')}
+              src={publicAsset('tool-backgrounds/books-library.webp')}
               alt=""
               loading="eager"
               className="h-full w-full object-cover object-right"

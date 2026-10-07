@@ -17,7 +17,7 @@ export default function Tools() {
             className="pointer-events-none absolute inset-0 -z-10"
           >
             <img
-              src={publicAsset('tool-backgrounds/tools-dashboard.png')}
+              src={publicAsset('tool-backgrounds/tools-dashboard.webp')}
               alt=""
               loading="eager"
               className="h-full w-full object-cover object-right"
@@ -43,7 +43,7 @@ export default function Tools() {
             </h1>
 
             <p className="mt-5 max-w-lg leading-relaxed text-muted-foreground">
-              Edit images, organise PDFs and run code.
+              Edit images and organise PDFs.
               Choose a tool below to get started.
             </p>
 

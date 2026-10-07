@@ -1,0 +1,396 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "LANEIGE Lip Glowy Balm",
+      "description": "Lightweight, moisture-coating lip balm for hydrated and tinted lips throughout the day.",
+      "source": "Amazon",
+      "category": "Beauty & Skincare",
+      "rating": 4.7,
+      "image": "/catalog-images/laneigeImg.jpg",
+      "link": "https://amzn.to/3N7smtE",
+      "published": true
+    },
+    {
+      "id": 2,
+      "title": "Medicube Deep Vita C Toner Pads",
+      "description": "Vitamin-rich pads for uneven skin tone and texture. Deeply hydrating and resurfacing.",
+      "source": "Amazon",
+      "category": "Beauty & Skincare",
+      "badge": "New",
+      "rating": 4.8,
+      "image": "/catalog-images/medicubeImg.jpg",
+      "link": "https://amzn.to/4aPUGtS",
+      "published": true
+    },
+    {
+      "id": 3,
+      "title": "COSRX Glass Skin Starter Set",
+      "description": "Exclusive kit featuring Snail Mucin 96% Essence and Retinol 0.1% Cream for radiant skin.",
+      "source": "Amazon",
+      "category": "Beauty & Skincare",
+      "badge": "Trending",
+      "rating": 4.8,
+      "image": "/catalog-images/cosrxImg.jpg",
+      "link": "https://amzn.to/4bkqUNX",
+      "published": true
+    },
+    {
+      "id": 4,
+      "title": "Levi's Women's Cinch Baggy Jeans",
+      "description": "Relaxed fit jeans with a cinched waist for a trendy, comfortable look.",
+      "source": "Amazon",
+      "category": "Fashion",
+      "badge": "Best Seller",
+      "rating": 4.3,
+      "image": "/catalog-images/jeansImg.jpg",
+      "link": "https://amzn.to/4rhXG7d",
+      "published": true
+    },
+    {
+      "id": 5,
+      "title": "Hanes Men's EcoSmart Hoodie Midweight Fleece",
+      "description": "Comfortable and eco-friendly hoodie made with up to 5% recycled polyester.",
+      "source": "Amazon",
+      "category": "Fashion",
+      "badge": "Trending",
+      "rating": 4.5,
+      "image": "/catalog-images/hanesImg.jpg",
+      "link": "https://amzn.to/4b7AdiX",
+      "published": true
+    },
+    {
+      "id": 6,
+      "title": "STANLEY Quencher H2.0 Tumbler",
+      "description": "STANLEY Quencher H2.0 Tumbler with Handle and Straw 30 oz | Flowstate 3-Position Lid ",
+      "source": "Amazon",
+      "category": "Kitchen",
+      "badge": "Trending",
+      "rating": 4.7,
+      "image": "/catalog-images/stanleyImg.jpg",
+      "link": "https://amzn.to/4sv7J9S",
+      "published": true
+    },
+    {
+      "id": 7,
+      "title": "SOJOS Retro Aviator Sunglasses for Women Men",
+      "description": "Classic 70s style oversized aviator sunglasses featuring a durable metal frame and UV400 protected lenses. Perfect for driving, travel, and daily fashion wear with a comfortable lightweight design",
+      "source": "Amazon",
+      "category": "Fashion",
+      "badge": "Best Seller",
+      "rating": 4.6,
+      "image": "/catalog-images/sojosImg.jpg",
+      "link": "https://amzn.to/40iG8wI",
+      "published": true
+    },
+    {
+      "id": 8,
+      "title": "Adidas Women's VL Court 3.0 Sneaker",
+      "description": "A classic skate-inspired sneaker featuring a premium suede upper and iconic 3-stripe design. Built with a vulcanized rubber outsole for flexibility and a cushioned sockliner for all-day comfort.",
+      "source": "Amazon",
+      "category": "Fashion",
+      "badge": "New",
+      "rating": 4.5,
+      "image": "/catalog-images/adidasImg.jpg",
+      "link": "https://amzn.to/3MTx9PA",
+      "published": true
+    },
+    {
+      "id": 9,
+      "title": "Apple AirPods Pro 2 (USB-C)",
+      "description": "Pro-level Active Noise Cancellation with H2 Chip, Personalized Spatial Audio, and 30 hours of battery life.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.6,
+      "image": "/catalog-images/airpodsImg.jpg",
+      "link": "https://amzn.to/4leJPNI",
+      "published": true
+    },
+    {
+      "id": 10,
+      "title": "Amazon Fire Stick HD",
+      "description": "Stream your favorite content on Netflix, Prime Video, Disney+ in Full HD with the Amazon Fire Stick HD. Enjoy access to thousands of apps, Alexa voice control, and a user-friendly interface.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.7,
+      "image": "/catalog-images/firestickImg.jpg",
+      "link": "https://amzn.to/4uhz01l",
+      "published": true
+    },
+    {
+      "id": 11,
+      "title": "Sony WH-1000XM4 Wireless Noise-Canceling Headphones",
+      "description": "Industry-leading noise cancellation, 30-hour battery life, and premium sound quality.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.6,
+      "image": "/catalog-images/sonywh.jpg",
+      "link": "https://amzn.to/4b7r4Iw",
+      "published": true
+    },
+    {
+      "id": 12,
+      "title": "Beats Pill - Wireless Bluetooth Speaker",
+      "description": "Portable Bluetooth speaker with powerful sound and a sleek design.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.7,
+      "image": "/catalog-images/beatspill.jpg",
+      "link": "https://amzn.to/4cIIhsY",
+      "published": true
+    },
+    {
+      "id": 13,
+      "title": "Apple AirTag (2nd Generation)",
+      "description": "Keep track of your belongings with Apple AirTag. Precision tracking, water resistance, and seamless integration with the Find My network.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.6,
+      "image": "/catalog-images/appletag.jpg",
+      "link": "https://amzn.to/3RGfyg0",
+      "published": true
+    },
+    {
+      "id": 14,
+      "title": "Anker Portable Charger",
+      "description": "High-capacity portable charger with fast charging technology for on-the-go power.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.6,
+      "image": "/catalog-images/AnkerCharger.jpg",
+      "link": "https://amzn.to/4x6bK7W",
+      "published": true
+    },
+    {
+      "id": 15,
+      "title": "Logitech Pebble Wireless Mouse",
+      "description": "Sleek and silent wireless mouse with dual connectivity and long battery life.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.6,
+      "image": "/catalog-images/LogitechMouse.jpg",
+      "link": "https://amzn.to/4vnL1Sz",
+      "published": true
+    },
+    {
+      "id": 16,
+      "title": "JBL Go 4 Portable Bluetooth Speaker",
+      "description": "Compact and waterproof Bluetooth speaker with vibrant sound and a built-in microphone.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.7,
+      "image": "/catalog-images/JBLspeaker.jpg",
+      "link": "https://amzn.to/3PYqNj9",
+      "published": true
+    },
+    {
+      "id": 17,
+      "title": "Hydro Flask / Owala Water Bottle",
+      "description": "Durable and insulated water bottle to keep your drinks cold or hot for hours.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.8,
+      "image": "/catalog-images/HydroFlask.jpg",
+      "link": "https://amzn.to/3PZt7jN",
+      "published": true
+    },
+    {
+      "id": 18,
+      "title": "Kindle Paperwhite",
+      "description": "Waterproof e-reader with a high-resolution display and adjustable warm light for a comfortable reading experience.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.7,
+      "image": "/catalog-images/Kindle.jpg",
+      "link": "https://amzn.to/4oeEZRV",
+      "published": true
+    },
+    {
+      "id": 19,
+      "title": "Ring Video Doorbell",
+      "description": "Keep your home safe with the Ring Video Doorbell. See, hear, and speak to visitors from your phone.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.5,
+      "image": "/catalog-images/ringbell.jpg",
+      "link": "https://amzn.to/4vpsh51",
+      "published": true
+    },
+    {
+      "id": 20,
+      "title": "Blink Mini Indoor Security Camera",
+      "description": "Compact wireless indoor camera with two-way audio and motion detection.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.6,
+      "image": "/catalog-images/blinkmini.jpg",
+      "link": "https://amzn.to/4cIIhsY",
+      "published": true
+    },
+    {
+      "id": 21,
+      "title": "Fujifilm Instax Mini 12 Camera",
+      "description": "Instant camera that produces credit-card-sized prints with a retro design.",
+      "source": "Amazon",
+      "category": "Electronics",
+      "rating": 4.6,
+      "image": "/catalog-images/FilmCamera.jpg",
+      "link": "https://amzn.to/4b7r4Iw",
+      "published": true
+    }
+  ],
+  "books": [
+    {
+      "id": 1,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "file": "https://drive.google.com/file/d/1BYf06ei8z-73a_Rq5kGoEZDa312FQRPI/view?usp=drive_link",
+      "genre": "Self-Development",
+      "cover": "/books-covers/atomic-habits.png",
+      "published": true
+    },
+    {
+      "id": 2,
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "file": "https://drive.google.com/file/d/1_mpIwzgESFvIS2SoEAYVJesmjLTLlA1J/view?usp=drive_link",
+      "genre": "Fiction",
+      "cover": "/books-covers/TheAlchemist.png",
+      "published": true
+    },
+    {
+      "id": 3,
+      "title": "Sherlock Holmes Reader",
+      "author": "Arthur Conan Doyle",
+      "file": "https://drive.google.com/file/d/1uM6l6x0N4PsvsYU-rjNaUTFWLY7Vi4cC/view?usp=drive_link",
+      "genre": "Mystery",
+      "cover": "/books-covers/sherlock-holmes.png",
+      "published": true
+    },
+    {
+      "id": 4,
+      "title": "All Quiet on the Western Front",
+      "author": "Erich Maria Remarque",
+      "file": "https://drive.google.com/file/d/1WlF7Gfi6DlTvn2oEfjocTTqc8BTNd47q/view?usp=drive_link",
+      "genre": "Historical Fiction",
+      "cover": "/books-covers/all-quiet.png",
+      "published": true
+    },
+    {
+      "id": 5,
+      "title": "The Guns of August",
+      "author": "Barbara W. Tuchman",
+      "file": "https://drive.google.com/file/d/1m55RgvXSqRUw2uu1t_D0B_krVfSPjMGh/view?usp=drive_link",
+      "genre": "History",
+      "cover": "/books-covers/guns-of-august.png",
+      "published": true
+    },
+    {
+      "id": 6,
+      "title": "Harry Potter & the Sorcerer's Stone",
+      "author": "J.K. Rowling",
+      "file": "https://drive.google.com/file/d/12W58_hgVW4EzulNW_bWpN8840jE4eo3x/view?usp=drive_link",
+      "genre": "Fantasy",
+      "cover": "/books-covers/harry-potter.png",
+      "published": true
+    },
+    {
+      "id": 7,
+      "title": "Al-Farooq",
+      "author": "Allama Shibli Nomani",
+      "file": "https://drive.google.com/file/d/1_9IV-amDlY8exfc3xvUdZaHYXRWWrO0A/view?usp=drive_link",
+      "genre": "Islamic History",
+      "cover": "/books-covers/al-farooq.png",
+      "published": true
+    },
+    {
+      "id": 8,
+      "title": "Saviours of Islamic Spirit",
+      "author": "Abul Hasan Ali Nadwi",
+      "file": "https://drive.google.com/file/d/1LBOuf66FLw8jccMZvMJJEKmr2K8OPR9p/view?usp=drive_link",
+      "genre": "Islamic History",
+      "cover": "/books-covers/saviours-islamic-spirit.png",
+      "published": true
+    },
+    {
+      "id": 9,
+      "title": "Lost Islamic History",
+      "author": "Firas Alkhateeb",
+      "file": "https://drive.google.com/file/d/101k2HQrZMRZQAuaLeM5OCOtkXyAdu-Me/view?usp=drive_link",
+      "genre": "Islamic History",
+      "cover": "/books-covers/lost-islamic-history.png",
+      "published": true
+    },
+    {
+      "id": 10,
+      "title": "The Sealed Nectar",
+      "author": "Safiur Rahman Mubarakpuri",
+      "file": "https://drive.google.com/file/d/1whBUCltnQUkpq4UQ3JnRtVGjvLCEGUi6/view?usp=drive_link",
+      "genre": "Biography",
+      "cover": "/books-covers/sealed-nectar.png",
+      "published": true
+    }
+  ],
+  "music": [
+    {
+      "id": 1,
+      "title": "Escape Your Love",
+      "artist": "FASSounds",
+      "url": "/music/fassounds-escape-your-love-upbeat-fashion-pop-dance-412230.mp3",
+      "genre": "Pop",
+      "licence": "Licence documentation not supplied; verify usage rights with the original source.",
+      "cover": "/music-covers/track-1.svg",
+      "published": true
+    },
+    {
+      "id": 2,
+      "title": "Water | Afro-pop Music",
+      "artist": "kontraa",
+      "url": "/music/kontraa-water-afro-pop-music-445661.mp3",
+      "genre": "Afro Pop",
+      "licence": "Licence documentation not supplied; verify usage rights with the original source.",
+      "cover": "/music-covers/track-2.svg",
+      "published": true
+    },
+    {
+      "id": 3,
+      "title": "Carnaval",
+      "artist": "Alec_Koff",
+      "url": "/music/alec_koff-carnaval-484622.mp3",
+      "genre": "Electronic",
+      "licence": "Licence documentation not supplied; verify usage rights with the original source.",
+      "cover": "/music-covers/track-3.svg",
+      "published": true
+    },
+    {
+      "id": 4,
+      "title": "Acoustic Spring Mothers Day",
+      "artist": "ikoliks_aj",
+      "url": "/music/ikoliks_aj-acoustic-spring-mothers-day-music-320427.mp3",
+      "genre": "Acoustic",
+      "licence": "Licence documentation not supplied; verify usage rights with the original source.",
+      "cover": "/music-covers/track-4.svg",
+      "published": true
+    },
+    {
+      "id": 5,
+      "title": "Dance Playful Night",
+      "artist": "AleXZavesa",
+      "url": "/music/alexzavesa-dance-playful-night-510786.mp3",
+      "genre": "Dance",
+      "licence": "Licence documentation not supplied; verify usage rights with the original source.",
+      "cover": "/music-covers/track-5.svg",
+      "published": true
+    },
+    {
+      "id": 6,
+      "title": "Powerful Dramatic Trailer",
+      "artist": "ArtMyLife",
+      "url": "/music/artmylife-powerful-dramatic-trailer-514242.mp3",
+      "genre": "Cinematic",
+      "licence": "Licence documentation not supplied; verify usage rights with the original source.",
+      "cover": "/music-covers/track-6.svg",
+      "published": true
+    }
+  ]
+}

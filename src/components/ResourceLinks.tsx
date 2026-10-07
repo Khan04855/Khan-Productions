@@ -5,7 +5,7 @@ const resources = [
   {
     title: 'Digital Tools',
     description:
-      'Image editing, PDF utilities and code execution, organised by task.',
+      'Image editing and PDF utilities, organised by task.',
     href: '/tools',
     image: '/cards/digital-tools.png',
   },
@@ -45,7 +45,7 @@ export default function ResourceLinks() {
               href={publicAsset(resource.href)}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-colors hover:border-primary"
+              className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-[border-color] hover:border-primary"
             >
               {/* Same-height image area for all three cards */}
               <div className="flex h-52 shrink-0 items-center justify-center bg-muted/30 p-6 sm:h-60">
@@ -58,7 +58,7 @@ export default function ResourceLinks() {
                 />
               </div>
 
-              <div className="flex flex-1 flex-col p-6">
+              <div className="resource-body flex flex-1 flex-col p-6">
                 <h3 className="text-xl font-semibold">
                   {resource.title}
                 </h3>
