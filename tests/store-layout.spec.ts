@@ -26,3 +26,6 @@ test('store grid, header search, categories and manual highlights', async ({page
  await page.setViewportSize({width:1440,height:1000});await page.goto('/');await page.locator('.product-grid').scrollIntoViewIfNeeded();await page.screenshot({path:'previews/store-layout-desktop.png'});
  expect(errors).toEqual([]);
 });
+
+// Keep non-analytics checks independent of the optional analytics banner.
+test.beforeEach(async({page})=>{await page.addInitScript(()=>localStorage.setItem('khan-analytics-choice','declined'));});

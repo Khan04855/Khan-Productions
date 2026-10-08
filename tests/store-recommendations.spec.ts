@@ -20,3 +20,6 @@ test('contact submission shows provider acceptance and preserves fields on failu
  for(const [label,value] of [['Name','Test visitor'],['Email','visitor@example.com'],['Subject','Website question'],['Message','Keep this message.']])await page.getByLabel(label,{exact:true}).fill(value);
  await page.getByRole('button',{name:'Send message',exact:true}).click();await expect(page.getByText('Delivery unavailable. Use support email.')).toBeVisible();await expect(page.getByLabel('Message',{exact:true})).toHaveValue('Keep this message.');
 });
+
+// Keep non-analytics checks independent of the optional analytics banner.
+test.beforeEach(async({page})=>{await page.addInitScript(()=>localStorage.setItem('khan-analytics-choice','declined'));});

@@ -239,3 +239,6 @@
 .product-grid .catalogue-body h3 {min-height:3.9em;}
 @media(min-width:1024px){.hero-copy {max-width:55%;}.hero-heading {max-width:610px;}}
 @media(max-width:767px){.hero-copy {max-width:100%;}.store-filters .catalogue-controls {flex-basis:100%;}.hero-heading {font-size:clamp(34px,8vw,48px);}.product-grid .catalogue-body h3 {min-height:4.2em;}}
+
+.analytics-choice {position:fixed;left:20px;bottom:20px;z-index:60;width:min(460px,calc(100vw - 40px));padding:20px;border:1px solid hsl(var(--border));border-radius:18px;background:hsl(var(--background));color:hsl(var(--foreground));box-shadow:0 8px 40px #0002;}
+@media(max-width:767px){.analytics-choice {left:12px;bottom:12px;width:calc(100vw - 24px);padding:16px;}.analytics-choice button {flex:1;}}

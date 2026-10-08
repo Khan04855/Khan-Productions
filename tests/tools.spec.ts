@@ -98,3 +98,6 @@ test('browser background removal produces a PNG with transparent pixels, without
   expect((await readFile((await download.path())!)).subarray(0,8)).toEqual(Buffer.from([137,80,78,71,13,10,26,10]));
   expect(errors).toEqual([]);
 });
+
+// Keep non-analytics checks independent of the optional analytics banner.
+test.beforeEach(async({page})=>{await page.addInitScript(()=>localStorage.setItem('khan-analytics-choice','declined'));});

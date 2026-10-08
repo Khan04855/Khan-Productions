@@ -10,3 +10,6 @@ test('admin adds, assigns, renames and hides product categories on mobile',async
  await page.goto('/');await expect(page.getByRole('group',{name:'Browse product categories'})).not.toContainText('Renamed Accessories');await page.getByLabel('Search shop products').fill('Browser category item');await page.getByRole('button',{name:'Submit product search'}).click();await expect(page.locator('#featured-products article')).toHaveCount(1);await expect(page.locator('#featured-products article')).toContainText('Renamed Accessories');
  await page.goto('/admin');await page.getByLabel('Search catalogue').fill('Browser category item');page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Delete Browser category item',exact:true}).click();await expect(page.getByText('Item deleted.',{exact:true})).toBeVisible();page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Delete category Renamed Accessories',exact:true}).click();await expect(page.getByText('Category deleted.',{exact:true})).toBeVisible();
 });
+
+// Keep non-analytics checks independent of the optional analytics banner.
+test.beforeEach(async({page})=>{await page.addInitScript(()=>localStorage.setItem('khan-analytics-choice','declined'));});
