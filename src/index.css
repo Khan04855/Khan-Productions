@@ -174,3 +174,56 @@
  .catalogue-pagination {gap:8px;}
 }
 @media(max-width:359px){.section-inner{padding-left:12px;padding-right:12px;}.tool-panel{padding:14px;} .catalogue-pagination p{width:100%;text-align:center;order:-1;} .store-hero h1{font-size:34px;}}
+
+/* Store layout: one readable default size, with two products on phones. */
+.header-search {display:flex;flex:1;min-width:140px;max-width:300px;border:1px solid hsl(var(--border));border-radius:12px;background:hsl(var(--card));overflow:hidden;}
+.header-search input {width:100%;min-width:0;border:0;background:transparent;padding:10px 12px;font-size:14px;color:hsl(var(--foreground));}
+.header-search button {display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;color:hsl(var(--primary));}
+.header-search:focus-within {outline:2px solid hsl(var(--primary));outline-offset:2px;}
+.product-categories {display:flex;flex-wrap:wrap;gap:8px;padding:8px 0;}
+.category-chip {min-height:44px;padding:9px 15px;border:1px solid hsl(var(--border));border-radius:999px;font-size:13px;background:hsl(var(--background));color:hsl(var(--foreground));}
+.category-chip[aria-pressed=true] {background:hsl(var(--primary));border-color:hsl(var(--primary));color:hsl(var(--primary-foreground));}
+.product-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.product-grid .catalogue-body {background-image:linear-gradient(rgba(255,255,255,.25),rgba(255,255,255,.4)),url('/images/product-card-texture.webp');background-size:cover;background-position:center;--catalogue-detail:rgba(255,255,255,.7);--foreground:164 35% 14%;--muted-foreground:168 20% 28%;border-top:1px solid #c5d9cf;}
+.product-grid .catalogue-body h3 {overflow-wrap:anywhere;}
+.product-grid .action {white-space:normal;text-align:center;}
+.product-showcase {margin-bottom:48px;}
+.showcase-viewport {overflow:hidden;border-radius:24px;border:1px solid hsl(var(--border));}
+.showcase-track {display:flex;touch-action:pan-y pinch-zoom;}
+.showcase-slide {flex:0 0 100%;min-width:0;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:32px;padding:40px;background:#123e3a;color:#fff;}
+.showcase-theme-1 {background:#34305b;}
+.showcase-theme-2 {background:#603b28;}
+.showcase-copy .eyebrow {color:#d5efe6;}
+.showcase-copy h2 {font-size:clamp(25px,3vw,40px);line-height:1.15;font-weight:700;max-width:440px;}
+.showcase-copy > p:not(.eyebrow) {margin:16px 0 22px;max-width:390px;color:#edf4f1;font-size:15px;line-height:1.6;}
+.showcase-copy .action {background:#fff;color:#123e3a;}
+.showcase-products {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.showcase-products > div {aspect-ratio:4/3;background:#fff;border-radius:18px;padding:12px;box-shadow:0 10px 24px #0002;overflow:hidden;}
+.showcase-products img {width:100%;height:100%;object-fit:contain;}
+.showcase-controls {display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px;}
+.showcase-dots {display:flex;gap:4px;}
+.showcase-dots button {width:44px;height:44px;display:grid;place-items:center;}
+.showcase-dots button::after {content:'';width:9px;height:9px;border-radius:50%;background:hsl(var(--muted-foreground));}
+.showcase-dots button[aria-current=true]::after {background:hsl(var(--primary));width:22px;border-radius:8px;}
+@media(min-width:1024px){.product-grid {grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;}}
+@media(max-width:767px){
+ .nav-main:has(.header-search) {flex-wrap:wrap;padding-bottom:12px;}
+ .header-search {order:3;flex-basis:100%;max-width:none;}
+ .store-hero > .section-inner {padding-top:190px;}
+ .product-store {scroll-margin-top:150px;}
+ #shop-heading {scroll-margin-top:160px;}
+ .product-grid .catalogue-card {border-radius:13px;}
+ .product-grid .product-image {padding:10px;aspect-ratio:1;}
+ .product-grid .catalogue-body {padding:12px;gap:8px;}
+ .product-grid .catalogue-body h3 {font-size:14px;line-height:1.4;}
+ .product-grid .catalogue-details {padding:6px 9px;font-size:12px;}
+ .product-grid .catalogue-details summary {padding:8px 0;}
+ .product-grid .catalogue-body .mt-auto > p {font-size:11px;gap:4px;flex-wrap:wrap;}
+ .product-grid .action {padding:10px 8px;font-size:12px;gap:5px;min-height:44px;}
+ .product-grid .action svg {width:14px;flex-shrink:0;}
+ .product-grid .catalogue-badge {top:8px;left:8px;padding:4px 6px;font-size:10px;}
+ .showcase-slide {grid-template-columns:1fr;gap:24px;padding:24px;}
+ .showcase-products {gap:10px;}
+ .showcase-products > div {aspect-ratio:3/2;padding:8px;}
+ .product-showcase {margin-bottom:32px;}
+}
