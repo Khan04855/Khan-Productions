@@ -10,6 +10,7 @@ mkdirSync(path.join(dataDir, 'uploads'), { recursive: true, mode: 0o700 });
 const db = new DatabaseSync(path.join(dataDir, 'catalogue.sqlite'));
 db.exec(`PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;
 CREATE TABLE IF NOT EXISTS items(kind TEXT NOT NULL,id INTEGER NOT NULL,data TEXT NOT NULL,published INTEGER NOT NULL,PRIMARY KEY(kind,id));
+CREATE TABLE IF NOT EXISTS categories(kind TEXT NOT NULL,name TEXT NOT NULL COLLATE NOCASE,visible INTEGER NOT NULL DEFAULT 1,PRIMARY KEY(kind,name));
 CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY,value TEXT);
 CREATE TABLE IF NOT EXISTS admin(id INTEGER PRIMARY KEY CHECK(id=1),username TEXT NOT NULL,salt TEXT NOT NULL,hash TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,csrf TEXT NOT NULL,expires INTEGER NOT NULL);`);
@@ -23,6 +24,15 @@ for (const kind of ['products','books','music']) {
  const next=Number(db.prepare('SELECT COALESCE(MAX(id),0)+1 AS id FROM items WHERE kind=?').get(kind).id);
  db.prepare('INSERT INTO metadata(key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=CAST(MAX(CAST(metadata.value AS INTEGER),CAST(excluded.value AS INTEGER)) AS TEXT)').run('next-'+kind,String(next));
 }
+// Migrate existing installations once without changing any items or admin credentials.
+if (!db.prepare("SELECT value FROM metadata WHERE key='categories-seeded'").get()) {
+ db.exec('BEGIN');
+ try { for (const row of db.prepare('SELECT kind,data FROM items').all()) {
+  const item=JSON.parse(row.data),name=row.kind==='products'?item.category:item.genre;
+  if(name)db.prepare('INSERT OR IGNORE INTO categories(kind,name) VALUES (?,?)').run(row.kind,name);
+ } db.prepare('INSERT INTO metadata VALUES (?,?)').run('categories-seeded','1');db.exec('COMMIT'); }
+ catch(e){db.exec('ROLLBACK');throw e;}
+}
 const error=(message,status=400)=>Object.assign(new Error(message),{status});
 const digest=value=>createHash('sha256').update(value).digest('hex');
 export function configureAdmin(username,password){
@@ -34,10 +44,42 @@ export function adminConfigured(){return !!db.prepare('SELECT id FROM admin WHER
 export function listCatalogue(includeDrafts=false){
  const result={products:[],books:[],music:[]};
  for(const row of db.prepare(`SELECT kind,data FROM items ${includeDrafts?'':'WHERE published=1'} ORDER BY id`).all())result[row.kind].push(JSON.parse(row.data));
+ result.categories=listCategories(includeDrafts);
  return result;
 }
 function text(value,name,max=200,required=true){if(typeof value!=='string'||value.length>max||(required&&!value.trim()))throw error(`${name} must be ${required?'non-empty text':'text'} up to ${max} characters.`);return value.trim();}
 function url(value,name,required=true){const str=text(value??'',name,2048,required);if(!str&&!required)return '';if(/^https?:\/\//i.test(str)){try{const u=new URL(str);if(u.username||u.password)throw Error();return u.href;}catch{throw error(`${name} must be a valid public URL.`);}}if(/^\/[a-zA-Z0-9_/-]/.test(str)&&!str.includes('..')&&!str.includes('\\')&&!str.startsWith('//')&&!/[\x00-\x1f]/.test(str))return str;throw error(`${name} must be an http(s) URL or a path starting with /.`);}
+export function listCategories(includeHidden=false){
+ const result={products:[],books:[],music:[]};
+ for(const row of db.prepare(`SELECT kind,name,visible FROM categories ${includeHidden?'':'WHERE visible=1'} ORDER BY name COLLATE NOCASE`).all())result[row.kind].push({name:row.name,visible:!!row.visible});
+ return result;
+}
+function categoryKind(kind){if(!['products','books','music'].includes(kind))throw error('Unknown category type.',404);}
+export function saveCategory(kind,input,oldName){
+ categoryKind(kind);const name=text(input.name,'Category name',100);
+ if(['all products','all books','all genres'].includes(name.toLowerCase()))throw error('This name is reserved for the all-items filter.');
+ if(typeof input.visible!=='boolean')throw error('Choose whether the category appears in filters.');
+ const existing=oldName===undefined?undefined:db.prepare('SELECT name FROM categories WHERE kind=? AND name=?').get(kind,oldName);
+ if(oldName!==undefined&&!existing)throw error('Category not found.',404);
+ const duplicate=db.prepare('SELECT name FROM categories WHERE kind=? AND name=?').get(kind,name);
+ if(duplicate&&duplicate.name!==existing?.name)throw error('A category with this name already exists.',409);
+ db.exec('BEGIN IMMEDIATE');
+ try {
+  if(existing){
+   db.prepare('UPDATE categories SET name=?,visible=? WHERE kind=? AND name=?').run(name,input.visible?1:0,kind,existing.name);
+   const field=kind==='products'?'category':'genre';
+   for(const row of db.prepare('SELECT id,data FROM items WHERE kind=?').all(kind)){
+    const item=JSON.parse(row.data);if(item[field]?.toLowerCase()===existing.name.toLowerCase()){item[field]=name;db.prepare('UPDATE items SET data=? WHERE kind=? AND id=?').run(JSON.stringify(item),kind,row.id);}
+   }
+  }else db.prepare('INSERT INTO categories VALUES (?,?,?)').run(kind,name,input.visible?1:0);
+  db.exec('COMMIT');return {name,visible:input.visible};
+ }catch(e){db.exec('ROLLBACK');throw e;}
+}
+export function deleteCategory(kind,name){
+ categoryKind(kind);const field=kind==='products'?'category':'genre';
+ if(db.prepare('SELECT data FROM items WHERE kind=?').all(kind).some(row=>JSON.parse(row.data)[field]?.toLowerCase()===name.toLowerCase()))throw error('This category contains items. Move them to another category first.',409);
+ if(!db.prepare('DELETE FROM categories WHERE kind=? AND name=?').run(kind,name).changes)throw error('Category not found.',404);
+}
 export function validateItem(kind,input){
  if(!['products','books','music'].includes(kind))throw error('Unknown catalogue type.',404);
  if(typeof input.published!=='boolean')throw error('Choose whether the item is published.');
@@ -51,13 +93,20 @@ export function validateItem(kind,input){
 }
 export function saveItem(kind,input,id){
  const item=validateItem(kind,input);
+ const field=kind==='products'?'category':'genre';
+ // Keep older clients compatible while maintaining a single canonical spelling.
+ const category=db.prepare('SELECT name FROM categories WHERE kind=? AND name=?').get(kind,item[field]);
+ if(category)item[field]=category.name;
+
  if(id!==undefined){
   if(!Number.isSafeInteger(id)||id<1||!db.prepare('SELECT id FROM items WHERE kind=? AND id=?').get(kind,id))throw error('Item not found.',404);
+  db.prepare('INSERT OR IGNORE INTO categories(kind,name) VALUES (?,?)').run(kind,item[field]);
   item.id=id;db.prepare('UPDATE items SET data=?,published=? WHERE kind=? AND id=?').run(JSON.stringify(item),item.published?1:0,kind,id);return item;
  }
  db.exec('BEGIN IMMEDIATE');
  try {
   id=Number(db.prepare('SELECT value FROM metadata WHERE key=?').get('next-'+kind).value);
+  db.prepare('INSERT OR IGNORE INTO categories(kind,name) VALUES (?,?)').run(kind,item[field]);
   item.id=id;db.prepare('INSERT INTO items VALUES (?,?,?,?)').run(kind,id,JSON.stringify(item),item.published?1:0);
   db.prepare('UPDATE metadata SET value=? WHERE key=?').run(String(id+1),'next-'+kind);
   db.exec('COMMIT');return item;
@@ -102,6 +151,13 @@ export async function adminRoute(req,res,pathname,reply){
   const bytes=Buffer.from(data.base64,'base64');if(!bytes.length||bytes.length>5*1024*1024)throw error('Image must be under 5 MB.',413);
   let ext;if(bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])))ext='png';else if(bytes[0]===255&&bytes[1]===216&&bytes[2]===255)ext='jpg';else if(bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WEBP')ext='webp';else throw error('Upload a PNG, JPEG or WebP image.');
   const filename=randomBytes(20).toString('hex')+'.'+ext;writeFileSync(path.join(dataDir,'uploads',filename),bytes,{mode:0o600});reply(res,201,{url:'/uploads/'+filename});return true;
+ }
+ if(pathname==='/api/admin/categories'&&req.method==='GET'){reply(res,200,listCategories(true));return true;}
+ const categoryMatch=pathname.match(/^\/api\/admin\/categories\/(products|books|music)$/);
+ if(categoryMatch){const kind=categoryMatch[1],input=await bodyJson(req);
+  if(req.method==='POST'){reply(res,201,saveCategory(kind,input));return true;}
+  if(req.method==='PUT'){reply(res,200,saveCategory(kind,input,text(input.oldName,'Original category',100)));return true;}
+  if(req.method==='DELETE'){deleteCategory(kind,text(input.name,'Category name',100));reply(res,200,{ok:true});return true;}
  }
  const match=pathname.match(/^\/api\/admin\/catalogue\/(products|books|music)(?:\/(\d+))?$/);
  if(match){const [,kind,rawId]=match,id=rawId===undefined?undefined:Number(rawId);

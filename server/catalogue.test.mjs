@@ -45,3 +45,23 @@ test('deleted track IDs are not reused by new tracks',async()=>{
  const data={title:'Stable favourite ID',artist:'Test',genre:'Test',url:'/music/test.mp3',licence:'Test only',cover:'',published:false};
  const first=saveItem('music',data);deleteItem('music',first.id);const next=saveItem('music',data);assert.ok(next.id>first.id);deleteItem('music',next.id);
 });
+
+test('categories require login and CSRF, persist, rename assigned items and hide only filters',async()=>{
+ cookie='';csrf='';assert.equal((await call('/api/admin/categories/products','POST',{name:'Accessories',visible:true})).status,401);
+ const login=await call('/api/admin/login','POST',{username:'test-admin',password:'test-password-long-123'});cookie=login.headers.get('set-cookie').split(';')[0];csrf=(await login.json()).csrf;
+ const route='/api/admin/categories/products';
+ assert.equal((await call(route,'POST',{name:'Accessories',visible:true},{'X-CSRF-Token':'bad'})).status,403);
+ assert.equal((await call(route,'POST',{name:' ',visible:true})).status,400);
+ assert.equal((await call(route,'POST',{name:'All Products',visible:true})).status,400);
+ assert.equal((await call(route,'POST',{name:'Accessories',visible:true})).status,201);
+ assert.equal((await call(route,'POST',{name:'accessories',visible:true})).status,409);
+ const create=await call('/api/admin/catalogue/products','POST',{title:'Category test',category:'accessories',image:'/test.jpg',link:'https://example.com',rating:4,published:true});const product=await create.json();assert.equal(product.category,'Accessories');
+ assert.equal((await call(route,'DELETE',{name:'Accessories'})).status,409);
+ assert.equal((await call(route,'PUT',{oldName:'Accessories',name:'Everyday Accessories',visible:false})).status,200);
+ const catalogue=await (await call('/api/catalogue')).json();assert.equal(catalogue.products.find(p=>p.id===product.id).category,'Everyday Accessories');assert.equal(catalogue.categories.products.some(c=>c.name==='Everyday Accessories'),false);
+ const admin=await (await call('/api/admin/catalogue')).json();assert.equal(admin.categories.products.find(c=>c.name==='Everyday Accessories').visible,false);
+ const child=execFileSync(process.execPath,['--input-type=module','-e',"import {listCatalogue} from './server/catalogue.mjs';console.log(JSON.stringify(listCatalogue(true)));"],{cwd:path.resolve(new URL('..',import.meta.url).pathname),env:{...process.env,DATA_DIR:temp},encoding:'utf8'});assert.equal(JSON.parse(child).categories.products.find(c=>c.name==='Everyday Accessories').visible,false);
+ assert.equal((await call('/api/admin/catalogue/products/'+product.id,'DELETE')).status,200);
+ assert.equal((await call(route,'DELETE',{name:'Everyday Accessories'})).status,200);
+ await call('/api/admin/logout','POST',{});
+});

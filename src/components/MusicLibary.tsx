@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { useCatalogue, catalogueAsset, type Track } from '@/contexts/CatalogueContext';
+import { useEffect, useRef, useState } from 'react';
+import { useCatalogue, categoryNames, catalogueAsset, type Track } from '@/contexts/CatalogueContext';
 import { useCataloguePages, CatalogueControls, CataloguePagination } from './CatalogueControls';
 import ToolLayout from './tools/ToolLayout';
 import { downloadFile } from '@/lib/tool-utils';
@@ -193,7 +193,7 @@ function MusicCard({ track, saved, onSave }: CardProps) {
 }
 
 export default function MusicLibrary() {
-  const {music:catalog}=useCatalogue();
+  const catalogue=useCatalogue();const {music:catalog}=catalogue;
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState('All Genres');
   const [onlySaved, setOnlySaved] = useState(false);
@@ -217,8 +217,10 @@ export default function MusicLibrary() {
 
   const genres = [
     'All Genres',
-    ...new Set(catalog.map(track => track.genre)),
+    ...categoryNames(catalogue, 'music'),
   ];
+
+  useEffect(()=>{if(!genres.includes(genre))setGenre('All Genres');},[catalogue,genre]);
 
   const filtered = catalog.filter(track => {
     const matchesGenre =
@@ -289,7 +291,7 @@ export default function MusicLibrary() {
             <label htmlFor="music-genre">Genre</label>
 
             <select
-              id="music-genre"
+              aria-label="Genre" id="music-genre"
               value={genre}
               onChange={event => setGenre(event.target.value)}
               className="w-full"
