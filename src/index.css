@@ -227,3 +227,15 @@
  .showcase-products > div {aspect-ratio:3/2;padding:8px;}
  .product-showcase {margin-bottom:32px;}
 }
+
+/* Fewer controls, a calmer hero and consistent information spacing. */
+.hero-copy {max-width:610px;}
+.hero-heading {font-size:clamp(36px,4.4vw,64px);max-width:610px;text-wrap:balance;}
+.store-filters {display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
+.store-filters .product-categories {flex:1 1 520px;padding:0;}
+.store-filters .catalogue-controls {flex:0 1 310px;flex-wrap:nowrap;}
+.store-filters .catalogue-controls label {min-width:0;flex:1;}
+.store-filters > .flex {flex-basis:100%;}
+.product-grid .catalogue-body h3 {min-height:3.9em;}
+@media(min-width:1024px){.hero-copy {max-width:55%;}.hero-heading {max-width:610px;}}
+@media(max-width:767px){.hero-copy {max-width:100%;}.store-filters .catalogue-controls {flex-basis:100%;}.hero-heading {font-size:clamp(34px,8vw,48px);}.product-grid .catalogue-body h3 {min-height:4.2em;}}

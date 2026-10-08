@@ -17,7 +17,7 @@ test('store grid, header search, categories and manual highlights', async ({page
  await expect(page.getByText('No products match your search.')).toBeVisible();
  await page.getByRole('button',{name:'Show all products',exact:true}).click();
  const chip=page.locator('.category-chip').nth(1);const category=await chip.innerText();await chip.click();
- await expect(page.locator('#product-category')).toHaveValue(category);
+ await expect(chip).toHaveAttribute('aria-pressed','true');await expect(page.locator('.store-filters [role=status]')).toContainText(category);
  await page.locator('.category-chip').first().click();
  await page.getByRole('button',{name:'Next highlight'}).click();await expect(page.getByRole('button',{name:'Show highlight 2'})).toHaveAttribute('aria-current','true');
  await page.waitForFunction(()=>{const active=document.querySelector('.showcase-slide[aria-hidden=false]');const viewport=document.querySelector('.showcase-viewport');return !!active&&!!viewport&&Math.abs(active.getBoundingClientRect().left-viewport.getBoundingClientRect().left)<2;});await page.locator('.product-showcase').scrollIntoViewIfNeeded();await page.screenshot({path:'previews/store-showcase-mobile.png'});

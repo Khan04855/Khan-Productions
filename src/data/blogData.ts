@@ -1,52 +1,6 @@
-export interface BlogPost {
-  id: number;
-  title: string;
-  caption: string;
-  image: string;
-  content?: string;
-}
-
-export const blogPosts: BlogPost[] = [
-  {
-    id: 1,
-    title: 'A vision of the future',
-    caption: 'Where Khan Productions is heading.',
-    image: '/blog-images/blog-1.jpg',
-    content: 'Khan Productions is constantly evolving, embracing new technologies and innovative solutions to stay ahead of the curve.'
-  },
-  {
-    id: 2,
-    title: 'Powering innovation',
-    caption: 'With code and creativity.',
-    image: '/blog-images/blog-2.jpg',
-    content: 'We combine cutting-edge technology with creative excellence to deliver solutions that make a real difference.'
-  },
-  {
-    id: 3,
-    title: 'Game Development',
-    caption: 'Our next frontier in entertainment.',
-    image: '/blog-images/blog-3.jpg',
-    content: 'Expanding into game development, we aim to create immersive experiences that captivate and inspire players worldwide.'
-  },
-  {
-    id: 4,
-    title: 'Creative Tools',
-    caption: 'Designing tomorrow with advanced solutions.',
-    image: '/blog-images/blog-4.jpg',
-    content: 'Our suite of creative tools empowers designers, editors, and creators to bring their visions to life with unprecedented ease.'
-  },
-  {
-    id: 5,
-    title: 'Global Empowerment',
-    caption: 'Khan Productions — empowering people across the globe.',
-    image: '/blog-images/blog-5.jpg',
-    content: 'From local communities to global markets, we strive to make premium tools and resources accessible to everyone.'
-  },
-  {
-    id: 6,
-    title: 'AI Innovation',
-    caption: 'Blending human creativity with artificial intelligence.',
-    image: '/blog-images/blog-6.jpg',
-    content: 'The future of creativity lies in the seamless integration of human ingenuity and artificial intelligence capabilities.'
-  }
+export interface BlogPost {id:number;title:string;caption:string;image:string;content?:string;}
+export const blogPosts:BlogPost[]=[
+ {id:1,title:'A practical checklist before you buy',caption:'Compare the model, seller and final checkout details.',image:'/catalog-images/stanleyImg.jpg',content:'Start with what you need the product to do, then compare dimensions, materials and included accessories. Confirm the exact model and colour on the seller’s page: similar names can refer to different versions. Read recent reviews that describe the same use you have in mind, including critical reviews. Before paying, check the final price, delivery destination, shipping cost and return conditions on Amazon. A product in this catalogue is a starting point for research; availability and seller terms can change.'},
+ {id:2,title:'How to compare headphones for everyday use',caption:'Look beyond the product name and listed rating.',image:'/catalog-images/sonywh.jpg',content:'Choose your main use first: calls, commuting, study or listening at home. Compare fit, weight, connection options and microphone features against the manufacturer’s current specifications for the exact model. For travel, check battery and charging details; for a desk setup, consider whether you need a wired option. Noise cancellation and comfort vary by product and person, so look for reviews describing longer listening sessions. Check compatibility with your own phone or computer before buying. Our listed ratings are supplied catalogue information, not reviews collected from visitors to this website.'},
+ {id:3,title:'Prepare a clear product image with our tools',caption:'Remove a background, choose a format and reduce file size.',image:'/catalog-images/HydroFlask.jpg',content:'Start with a sharp image you own or have permission to use. Open Background Remover to create a cutout, then inspect fine edges before downloading a transparent PNG. Use Image Tools to resize or compress the image and compare the preview with the original. PNG supports transparency; JPG is useful for photographs with a solid background, and WebP supports both photographic content and transparency. Keep the product’s proportions and colour accurate. Save the original so you can try different settings without losing your source image.'}
 ];

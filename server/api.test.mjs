@@ -1,3 +1,4 @@
+import http from 'node:http';
 import {mkdtempSync,rmSync} from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -46,4 +47,17 @@ test('built website serves real files, byte ranges, SPA routes and missing files
   assert.equal((await realFetch(base+'/music/missing.mp3')).status,404);
   assert.equal((await realFetch(base+'/.env')).status,404);
   assert.equal((await realFetch(base+'/api/nonexistent')).status,404);
+});
+test('www redirect preserves path/query; policies have server-rendered canonicals',async()=>{
+ const redirected=await new Promise((resolve,reject)=>{http.get(base+'/tools?ref=test',{headers:{Host:'www.ikhanproductions.com'}},res=>{res.resume();resolve(res);}).on('error',reject);});
+ assert.equal(redirected.statusCode,308);assert.equal(redirected.headers.location,'https://ikhanproductions.com/tools?ref=test');
+ assert.equal((await realFetch(base+'/api/health',{headers:{Host:'www.ikhanproductions.com'},redirect:'manual'})).status,200);
+ for(const route of ['/','/tools','/privacy','/affiliate-disclosure']){
+  const result=await realFetch(base+route);assert.equal(result.status,200);const html=await result.text();assert.match(html,new RegExp('href="https://ikhanproductions.com'+route+'"'));assert.equal((html.match(/rel="canonical"/g)||[]).length,1);
+  const head=await realFetch(base+route,{method:'HEAD'});assert.equal(head.status,200);assert.equal(await head.text(),'');
+ }
+ const admin=await (await realFetch(base+'/admin')).text();assert.doesNotMatch(admin,/rel="canonical"/);assert.match(admin,/noindex/);
+ const config=await (await realFetch(base+'/api/contact/config')).json();assert.equal(config.enabled,false);
+ assert.equal((await post('/api/contact',{name:'Test',email:'v@example.com',subject:'Test',message:'Test'},'http://localhost:8080')).status,503);
+ assert.equal((await post('/api/contact',{})).status,403);
 });

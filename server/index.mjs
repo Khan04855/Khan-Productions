@@ -1,3 +1,4 @@
+import { contactConfigured, deliverContact } from './contact.mjs';
 import { adminRoute, dataDir } from './catalogue.mjs';
 import http from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
@@ -51,13 +52,25 @@ async function staticFile(req, res, pathname) {
   let info;
   try { info = await stat(filename); } catch { /* Handle known SPA routes only. */ }
   if (!info?.isFile()) {
-    const routes = ['/', '/tools', '/library', '/music-library', '/background-remover', '/admin', '/pdf-toolkit', '/image-tools'];
+    const routes = ['/', '/tools', '/library', '/music-library', '/background-remover', '/admin', '/pdf-toolkit', '/image-tools', '/privacy', '/affiliate-disclosure'];
     if (!routes.includes(pathname)) return reply(res, 404, { error: 'File not found.' });
     filename = path.join(distRoot, pathname === '/' ? '' : pathname.slice(1), 'index.html');
     try { info = await stat(filename); } catch {
       filename = path.join(distRoot, 'index.html');
       try { info = await stat(filename); } catch { return reply(res, 404, { error: 'Build the frontend first with npm run build.' }); }
     }
+  }
+  // Give every SPA page its own canonical even before JavaScript executes.
+  if(path.extname(filename)==='.html'){
+    let html=await readFile(filename,'utf8');
+    html=html.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi,'').replace(/<meta\b[^>]*property=["']og:url["'][^>]*>/gi,'');
+    if(pathname==='/admin')html=html.replace('</head>','<meta name="robots" content="noindex, nofollow"/></head>');
+    else {
+      const href='https://ikhanproductions.com'+pathname.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+      html=html.replace('</head>',`<link rel="canonical" href="${href}"/><meta property="og:url" content="${href}"/></head>`);
+    }
+    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Content-Length':Buffer.byteLength(html),'Cache-Control':'no-cache'});
+    return res.end(req.method==='HEAD'?undefined:html);
   }
   const mime = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.mp3': 'audio/mpeg', '.pdf': 'application/pdf', '.wasm': 'application/wasm', '.xml': 'application/xml', '.txt': 'text/plain' }[path.extname(filename)] || 'application/octet-stream';
   const headers = { 'Content-Type': mime, 'Accept-Ranges': 'bytes', 'Cache-Control': 'no-cache' };
@@ -82,7 +95,12 @@ async function staticFile(req, res, pathname) {
 export const server = http.createServer(async (req, res) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   try {
-    const pathname = new URL(req.url, 'http://localhost').pathname;
+    const requestUrl=new URL(req.url,'http://localhost');
+    const pathname=requestUrl.pathname;
+    // Use a fixed target, never a client-supplied redirect host. Keep path/query.
+    if(['GET','HEAD'].includes(req.method)&&req.headers.host?.toLowerCase().split(':')[0]==='www.ikhanproductions.com'&&!pathname.startsWith('/api/')){
+      res.writeHead(308,{Location:'https://ikhanproductions.com'+requestUrl.pathname+requestUrl.search,'Cache-Control':'no-cache'});return res.end();
+    }
     if (pathname.startsWith('/uploads/')) {
       if (!['GET','HEAD'].includes(req.method) || !/^\/uploads\/[a-f0-9]{40}\.(png|jpg|webp)$/.test(pathname)) return reply(res,404,{error:'File not found.'});
       const filename=path.join(dataDir,pathname); let info; try {info=await stat(filename);} catch {return reply(res,404,{error:'File not found.'});}
@@ -108,6 +126,17 @@ export const server = http.createServer(async (req, res) => {
       services: { assistant: !!(process.env.GEMINI_API_KEY || process.env.AI_API_KEY), background: 'browser' },
       note: 'Configuration presence only; provider credentials are not validated by this endpoint.',
     });
+    if(req.method==='GET'&&pathname==='/api/contact/config')return reply(res,200,{enabled:contactConfigured()});
+    if(req.method==='POST'&&pathname==='/api/contact'){
+      if(!origin)return reply(res,403,{error:'Please send your enquiry from the website contact form.'});
+      const now=Date.now(),key='contact:'+req.socket.remoteAddress;
+      for(const [k,v] of counters)if(now-v.time>300000)counters.delete(k);
+      const bucket=counters.get(key)||{count:0,time:now};
+      if(now-bucket.time>300000){bucket.count=0;bucket.time=now;}
+      bucket.count++;counters.set(key,bucket);
+      if(bucket.count>20)return reply(res,429,{error:'Too many enquiries. Please wait a few minutes or email support.'});
+      const body=await json(req);return reply(res,200,await deliverContact(body));
+    }
     if (await adminRoute(req, res, pathname, reply)) return;
     if (req.method !== 'POST' || !['/api/chat'].includes(pathname)) return reply(res, 404, { error: 'Endpoint not found.' });
     const ip = req.socket.remoteAddress, now = Date.now();
